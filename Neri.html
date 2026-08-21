@@ -1,0 +1,672 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Neri Aiko ★ VTuber & Streamer</title>
+
+    <!-- SEO -->
+    <meta name="description" content="Neri Aiko, VTuber roedora urbana. Directos en Twitch, arte callejero y mucho queso. ¡Únete a la madriguera!">
+    <meta property="og:title" content="Neri Aiko ★ VTuber & Streamer">
+    <meta property="og:description" content="Neri Aiko, VTuber roedora urbana. Directos en Twitch, arte callejero y mucho queso.">
+    <meta property="og:image" content="img/Neri.png">
+    <meta property="og:url" content="https://neriaiko.com">
+    <meta name="twitter:card" content="summary_large_image">
+
+    <!-- Icono -->
+    <link rel="icon" href="img/Neri.png">
+
+    <!-- Fuentes -->
+    <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;700;900&family=Grape+Nuts&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --asfalto: #1a1a1a;
+            --carbon: #0f0f0f;
+            --burdeos: #8b2e2e;
+            --burdeos-oscuro: #5e1f1f;
+            --fucsia: #ff44cc;
+            --fucsia-suave: rgba(255, 68, 204, 0.6);
+            --blanco: #f5f0eb;
+            --gris: #aaa;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: var(--asfalto);
+            color: var(--blanco);
+            font-family: 'Rubik', sans-serif;
+            overflow-x: hidden;
+            cursor: none; /* Ocultamos cursor nativo para usar calaverita */
+            position: relative;
+            min-height: 100vh;
+        }
+
+        /* Textura de cuadrícula */
+        body::before {
+            content: "";
+            position: fixed;
+            inset: 0;
+            background-image: 
+                repeating-linear-gradient(45deg, 
+                    rgba(139,46,46,0.05) 0px, 
+                    rgba(139,46,46,0.05) 2px, 
+                    transparent 2px, 
+                    transparent 8px);
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        /* Cursor personalizado: calaverita */
+        #cursor-skull {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 40px;
+            height: 40px;
+            pointer-events: none;
+            z-index: 10000;
+            font-size: 30px;
+            line-height: 1;
+            transform: translate(-50%, -50%);
+            transition: transform 0.1s ease;
+            filter: drop-shadow(0 0 6px var(--fucsia));
+        }
+
+        #cursor-skull.click-effect {
+            transform: translate(-50%, -50%) scale(0.8);
+        }
+
+        /* Estela de partículas fucsia */
+        .particle {
+            position: fixed;
+            width: 5px;
+            height: 5px;
+            background: var(--fucsia);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 9999;
+            animation: fadeOut 0.6s linear forwards;
+        }
+
+        @keyframes fadeOut {
+            to {
+                opacity: 0;
+                transform: translateY(10px) scale(0.2);
+            }
+        }
+
+        /* Header fijo */
+        .header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 15px 30px;
+            background: rgba(15,15,15,0.85);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--burdeos);
+            z-index: 1000;
+        }
+
+        .logo {
+            font-family: 'Grape Nuts', cursive;
+            font-size: 1.8rem;
+            color: var(--fucsia);
+            text-decoration: none;
+        }
+
+        .nav-desktop {
+            display: flex;
+            gap: 25px;
+        }
+
+        .nav-desktop a {
+            color: var(--blanco);
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 0.95rem;
+            letter-spacing: 1px;
+            transition: color 0.3s;
+        }
+
+        .nav-desktop a:hover {
+            color: var(--fucsia);
+        }
+
+        .live-indicator {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: var(--carbon);
+            padding: 6px 14px;
+            border-radius: 20px;
+            border: 1px solid var(--burdeos);
+            font-size: 0.85rem;
+            font-weight: bold;
+        }
+
+        .live-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: #555;
+        }
+        .live-dot.active {
+            background: #ff2a2a;
+            box-shadow: 0 0 8px #ff2a2a;
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.3); }
+            100% { transform: scale(1); }
+        }
+
+        .menu-toggle {
+            display: none;
+            background: none;
+            border: none;
+            color: var(--blanco);
+            font-size: 1.8rem;
+            cursor: pointer;
+        }
+
+        .mobile-menu {
+            display: none;
+            flex-direction: column;
+            background: var(--carbon);
+            padding: 20px;
+            gap: 15px;
+            position: fixed;
+            top: 70px;
+            left: 20px;
+            right: 20px;
+            border-radius: 15px;
+            border: 1px solid var(--burdeos);
+            z-index: 999;
+        }
+        .mobile-menu a {
+            color: var(--blanco);
+            text-decoration: none;
+            font-weight: bold;
+        }
+        .mobile-menu.show {
+            display: flex;
+        }
+
+        @media (max-width: 768px) {
+            .nav-desktop {
+                display: none;
+            }
+            .menu-toggle {
+                display: block;
+            }
+        }
+
+        /* Hero */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 120px 20px 40px;
+            gap: 40px;
+            flex-wrap: wrap;
+        }
+
+        .hero-content {
+            flex: 1 1 400px;
+            max-width: 600px;
+            z-index: 10;
+        }
+
+        .hero-title {
+            font-size: clamp(2.5rem, 8vw, 5rem);
+            font-weight: 900;
+            line-height: 1.1;
+            text-transform: uppercase;
+            color: var(--blanco);
+            text-shadow: 4px 4px 0 var(--burdeos);
+        }
+
+        .hero-subtitle {
+            font-family: 'Grape Nuts', cursive;
+            font-size: 1.8rem;
+            color: var(--fucsia);
+            margin-top: 10px;
+        }
+
+        .hero-btn {
+            display: inline-block;
+            margin-top: 30px;
+            padding: 12px 28px;
+            background: var(--fucsia);
+            color: var(--carbon);
+            font-weight: bold;
+            font-size: 1.1rem;
+            border: none;
+            border-radius: 40px;
+            text-decoration: none;
+            box-shadow: 0 0 20px rgba(255,68,204,0.5);
+            transition: all 0.3s;
+        }
+        .hero-btn:hover {
+            background: #ff77dd;
+            transform: translateY(-3px);
+            box-shadow: 0 0 30px rgba(255,68,204,0.8);
+        }
+
+        .hero-art {
+            flex: 0 1 400px;
+            position: relative;
+            z-index: 10;
+            display: flex;
+            justify-content: center;
+        }
+        .hero-art img {
+            width: 100%;
+            max-width: 380px;
+            height: auto;
+            max-height: 70vh;
+            object-fit: contain;
+            border-radius: 20px;
+            border: 4px solid var(--burdeos);
+            box-shadow: 0 0 50px rgba(139,46,46,0.4);
+            background: rgba(15,15,15,0.7);
+            padding: 5px;
+        }
+
+        .section {
+            padding: 80px 20px;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .section-title {
+            font-size: 2rem;
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 30px;
+            color: var(--blanco);
+            position: relative;
+        }
+        .section-title::after {
+            content: "";
+            display: block;
+            width: 80px;
+            height: 4px;
+            background: var(--fucsia);
+            margin-top: 8px;
+        }
+
+        .card-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+
+        .card {
+            background: rgba(15,15,15,0.7);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--burdeos);
+            border-radius: 15px;
+            padding: 20px;
+            transition: all 0.3s;
+        }
+        .card:hover {
+            border-color: var(--fucsia);
+            box-shadow: 0 0 20px rgba(255,68,204,0.3);
+            transform: translateY(-5px);
+        }
+
+        /* Horario */
+        .schedule-card {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        .day {
+            font-weight: 900;
+            color: var(--fucsia);
+            font-size: 1.2rem;
+            letter-spacing: 1px;
+        }
+        .time-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 1rem;
+        }
+        .local-time {
+            color: var(--fucsia);
+            font-weight: 700;
+        }
+        .user-time {
+            color: var(--gris);
+        }
+
+        /* Próximo directo */
+        .next-stream-card {
+            margin-top: 30px;
+            background: rgba(15,15,15,0.8);
+            border: 2px solid var(--fucsia);
+            border-radius: 20px;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 0 20px rgba(255,68,204,0.3);
+        }
+        .next-stream-label {
+            font-size: 1rem;
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: var(--fucsia);
+            margin-bottom: 10px;
+        }
+        #next-stream-countdown {
+            font-size: 2rem;
+            font-weight: 900;
+            color: var(--blanco);
+            letter-spacing: 1px;
+        }
+
+        /* Cola de ratón separadora */
+        .mouse-tail-divider {
+            height: 120px;
+            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 120"><path d="M50 0 Q60 30 45 60 Q30 90 50 120" stroke="%238b2e2e" fill="none" stroke-width="3" stroke-dasharray="5 5"/></svg>') repeat-x;
+            background-size: 100px 120px;
+            opacity: 0.4;
+            margin: 0 auto;
+        }
+
+        footer {
+            text-align: center;
+            padding: 30px;
+            color: var(--gris);
+            font-size: 0.9rem;
+            border-top: 1px solid var(--burdeos);
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Cursor personalizado -->
+    <div id="cursor-skull">💀</div>
+
+    <!-- HEADER -->
+    <header class="header">
+        <a href="#inicio" class="logo">Neri Aiko</a>
+        <nav class="nav-desktop">
+            <a href="#inicio">Inicio</a>
+            <a href="sobre-mi.html">Sobre Mí</a>
+            <a href="#horario">Horario</a>
+            <a href="#contacto">Contacto</a>
+        </nav>
+        <div class="live-indicator" id="liveIndicator">
+            <span class="live-dot" id="liveDot"></span>
+            <span id="liveText">Cargando...</span>
+        </div>
+        <button class="menu-toggle" id="menuToggle" aria-label="Abrir menú">☰</button>
+    </header>
+
+    <!-- MENÚ MÓVIL -->
+    <div class="mobile-menu" id="mobileMenu">
+        <a href="#inicio">Inicio</a>
+        <a href="sobre-mi.html">Sobre Mí</a>
+        <a href="#horario">Horario</a>
+        <a href="#contacto">Contacto</a>
+    </div>
+
+    <!-- HERO -->
+    <section class="hero" id="inicio">
+        <div class="hero-content">
+            <h1 class="hero-title">¡Bienvenido a la madriguera!</h1>
+            <p class="hero-subtitle">Neri Aiko · VTuber & Streamer</p>
+            <a href="https://www.twitch.tv/neriaiko" target="_blank" class="hero-btn">VER EN TWITCH</a>
+        </div>
+        <div class="hero-art">
+            <img src="img/Neri.png" alt="Neri Aiko" loading="eager" decoding="async">
+        </div>
+    </section>
+
+    <!-- HORARIO -->
+    <section class="section" id="horario">
+        <h2 class="section-title">Horario de Directos</h2>
+        <div class="card-grid" id="schedule-list"></div>
+
+        <!-- Próximo directo -->
+        <div class="next-stream-card">
+            <div class="next-stream-label">Próximo directo</div>
+            <div id="next-stream-countdown">Calculando...</div>
+        </div>
+    </section>
+
+    <!-- CONTACTO (placeholder) -->
+    <section class="section" id="contacto">
+        <h2 class="section-title">Contacto</h2>
+        <p>Próximamente podrás ponerte en contacto con Neri. ¡Mantente atento!</p>
+    </section>
+
+    <!-- Separador -->
+    <div class="mouse-tail-divider"></div>
+
+    <footer>
+        © 2025 Neri Aiko 💜 Todos los derechos reservados.
+    </footer>
+
+    <script defer>
+        // ===== CURSOR PERSONALIZADO =====
+        const cursorSkull = document.getElementById('cursor-skull');
+        document.addEventListener('mousemove', (e) => {
+            cursorSkull.style.left = e.clientX + 'px';
+            cursorSkull.style.top = e.clientY + 'px';
+        });
+        document.addEventListener('mousedown', () => {
+            cursorSkull.classList.add('click-effect');
+        });
+        document.addEventListener('mouseup', () => {
+            cursorSkull.classList.remove('click-effect');
+        });
+
+        // ===== ESTELA DE PARTÍCULAS =====
+        let lastParticleTime = 0;
+        document.addEventListener('mousemove', (e) => {
+            const now = Date.now();
+            if (now - lastParticleTime < 50) return;
+            lastParticleTime = now;
+            const particle = document.createElement('div');
+            particle.className = 'particle';
+            particle.style.left = (e.clientX - 2) + 'px';
+            particle.style.top = (e.clientY - 2) + 'px';
+            document.body.appendChild(particle);
+            setTimeout(() => particle.remove(), 600);
+            const particles = document.querySelectorAll('.particle');
+            if (particles.length > 30) particles[0].remove();
+        });
+
+        // ===== MENÚ MÓVIL =====
+        const menuToggle = document.getElementById('menuToggle');
+        const mobileMenu = document.getElementById('mobileMenu');
+        menuToggle.addEventListener('click', () => mobileMenu.classList.toggle('show'));
+        mobileMenu.querySelectorAll('a').forEach(link => {
+            link.addEventListener('click', () => mobileMenu.classList.remove('show'));
+        });
+
+        // ===== SCROLL SUAVE =====
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) target.scrollIntoView({ behavior: 'smooth' });
+            });
+        });
+
+        // ===== INDICADOR EN VIVO =====
+        const WORKER_URL = 'https://nameless-resonance-e957togi-kirei-stats.togivt.workers.dev/api/stats';
+        async function checkLive() {
+            try {
+                const response = await fetch(WORKER_URL);
+                const data = await response.json();
+                const isLive = data.isLive || false;
+                const liveDot = document.getElementById('liveDot');
+                const liveText = document.getElementById('liveText');
+                if (isLive) {
+                    liveDot.classList.add('active');
+                    liveText.textContent = '🔴 EN DIRECTO AHORA';
+                } else {
+                    liveDot.classList.remove('active');
+                    liveText.textContent = '⚫ No está en directo';
+                }
+            } catch (error) {
+                document.getElementById('liveText').textContent = 'Estado desconocido';
+            }
+        }
+        checkLive();
+        setInterval(checkLive, 60000);
+
+        // ===== HORARIO DINÁMICO =====
+        // Horarios definidos en UTC (día 0=domingo, 1=lunes, ...)
+        // Lunes 20:00 El Salvador (UTC-6) -> Martes 02:00 UTC
+        // Miércoles 20:00 El Salvador -> Jueves 02:00 UTC
+        // Viernes 21:00 El Salvador -> Sábado 03:00 UTC
+        // Domingo 18:00 El Salvador -> Lunes 00:00 UTC
+        const streams = [
+            { day: 2, hour: 2, minute: 0 },  // martes 02:00 UTC -> lunes 20:00 El Salvador
+            { day: 4, hour: 2, minute: 0 },  // jueves 02:00 UTC -> miércoles 20:00 El Salvador
+            { day: 6, hour: 3, minute: 0 },  // sábado 03:00 UTC -> viernes 21:00 El Salvador
+            { day: 1, hour: 0, minute: 0 }   // lunes 00:00 UTC -> domingo 18:00 El Salvador
+        ];
+
+        // Variables para el país del visitante
+        let visitorCountry = null;
+        let visitorCountryCode = null;
+
+        function getFlagEmoji(countryCode) {
+            const codePoints = countryCode.toUpperCase().split('').map(char => 127397 + char.charCodeAt());
+            return String.fromCodePoint(...codePoints);
+        }
+
+        async function fetchVisitorCountry() {
+            try {
+                const response = await fetch('https://ipapi.co/json/');
+                const data = await response.json();
+                visitorCountry = data.country_name || null;
+                visitorCountryCode = data.country_code || null;
+            } catch (error) {
+                console.error('No se pudo obtener el país del visitante:', error);
+            }
+            // Re-renderizar horario con el país actualizado
+            renderSchedule();
+        }
+
+        function getNextOccurrence(stream) {
+            const now = new Date();
+            for (let i = 0; i < 8; i++) {
+                let candidate = new Date(now);
+                candidate.setDate(now.getDate() + i);
+                candidate.setUTCHours(stream.hour, stream.minute, 0, 0);
+                if (candidate.getUTCDay() === stream.day && candidate > now) {
+                    return candidate;
+                }
+            }
+            return null;
+        }
+
+        function getNextStream() {
+            let closest = null;
+            let closestTime = null;
+            streams.forEach(stream => {
+                const next = getNextOccurrence(stream);
+                if (next && (!closestTime || next < closestTime)) {
+                    closestTime = next;
+                    closest = stream;
+                }
+            });
+            return { stream: closest, date: closestTime };
+        }
+
+        function renderSchedule() {
+            const scheduleList = document.getElementById('schedule-list');
+            const daysShort = ['DOM', 'LUN', 'MAR', 'MIÉ', 'JUE', 'VIE', 'SÁB'];
+            scheduleList.innerHTML = '';
+
+            streams.forEach(stream => {
+                // Crear una fecha de referencia (hoy) para el día correcto
+                const now = new Date();
+                let targetDate = new Date(now);
+                targetDate.setUTCDate(now.getUTCDate() + ((stream.day - now.getUTCDay() + 7) % 7));
+                targetDate.setUTCHours(stream.hour, stream.minute, 0, 0);
+
+                // Hora de El Salvador (UTC-6)
+                const elSalvadorDate = new Date(targetDate);
+                const elSalvadorTime = elSalvadorDate.toLocaleTimeString('es-SV', {
+                    hour: '2-digit',
+                    minute: '2-digit',
+                    timeZone: 'America/El_Salvador'
+                });
+
+                // Hora local del visitante
+                const visitorTime = targetDate.toLocaleTimeString([], {
+                    hour: '2-digit',
+                    minute: '2-digit'
+                });
+
+                const dayName = daysShort[stream.day];
+
+                // Determinar bandera y país para mostrar
+                const flag = visitorCountryCode ? getFlagEmoji(visitorCountryCode) : '🌐';
+                const countryDisplay = visitorCountry || 'tu hora';
+
+                const card = document.createElement('div');
+                card.className = 'card schedule-card';
+                card.innerHTML = `
+                    <div class="day">${dayName}</div>
+                    <div class="time-info">
+                        <span class="local-time">🇸🇻 ${elSalvadorTime}</span>
+                        <span class="user-time">${flag} ${visitorTime} (${countryDisplay})</span>
+                    </div>
+                `;
+                scheduleList.appendChild(card);
+            });
+        }
+
+        function updateCountdown() {
+            const { stream, date } = getNextStream();
+            const countdownEl = document.getElementById('next-stream-countdown');
+            if (!date) {
+                countdownEl.textContent = 'Sin directos programados';
+                return;
+            }
+            const diff = date.getTime() - Date.now();
+            if (diff <= 0) {
+                countdownEl.textContent = '¡En vivo ahora!';
+                return;
+            }
+            const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+            countdownEl.textContent = `${days}d ${hours}h ${minutes}m ${seconds}s`;
+        }
+
+        // Iniciar horario
+        renderSchedule();
+        updateCountdown();
+        setInterval(updateCountdown, 1000);
+
+        // Obtener país del visitante (actualizará el horario al completarse)
+        fetchVisitorCountry();
+    </script>
+</body>
+</html>

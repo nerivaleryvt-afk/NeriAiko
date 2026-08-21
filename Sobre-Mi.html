@@ -1,0 +1,815 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sobre Mí ★ Neri Aiko</title>
+
+    <!-- SEO -->
+    <meta name="description" content="Conoce a Neri Aiko, VTuber roedora urbana. Descubre su historia, gustos, ficha técnica y más.">
+    <meta property="og:title" content="Sobre Mí ★ Neri Aiko">
+    <meta property="og:description" content="Conoce a Neri Aiko, VTuber roedora urbana. Descubre su historia, gustos, ficha técnica y más.">
+    <meta property="og:image" content="img/Neri.png">
+    <meta property="og:url" content="https://neriaiko.com/sobre-mi">
+    <meta name="twitter:card" content="summary_large_image">
+
+    <!-- Icono -->
+    <link rel="icon" href="img/Neri.png">
+
+    <!-- Fuentes -->
+    <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;700;900&family=Grape+Nuts&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --asfalto: #1a1a1a;
+            --carbon: #0f0f0f;
+            --burdeos: #8b2e2e;
+            --burdeos-oscuro: #5e1f1f;
+            --fucsia: #ff44cc;
+            --fucsia-suave: rgba(255, 68, 204, 0.6);
+            --blanco: #f5f0eb;
+            --gris: #aaa;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: var(--asfalto);
+            color: var(--blanco);
+            font-family: 'Rubik', sans-serif;
+            overflow-x: hidden;
+            cursor: none;
+            position: relative;
+            min-height: 100vh;
+        }
+
+        /* Textura de cuadrícula */
+        body::before {
+            content: "";
+            position: fixed;
+            inset: 0;
+            background-image: 
+                repeating-linear-gradient(45deg, 
+                    rgba(139,46,46,0.05) 0px, 
+                    rgba(139,46,46,0.05) 2px, 
+                    transparent 2px, 
+                    transparent 8px);
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        /* Cursor personalizado: calaverita */
+        #cursor-skull {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 40px;
+            height: 40px;
+            pointer-events: none;
+            z-index: 10000;
+            font-size: 30px;
+            line-height: 1;
+            transform: translate(-50%, -50%);
+            transition: transform 0.1s ease;
+            filter: drop-shadow(0 0 6px var(--fucsia));
+        }
+
+        #cursor-skull.click-effect {
+            transform: translate(-50%, -50%) scale(0.8);
+        }
+
+        /* Partículas que siguen al cursor */
+        .particle {
+            position: fixed;
+            width: 5px;
+            height: 5px;
+            background: var(--fucsia);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 9999;
+            animation: fadeOut 0.6s linear forwards;
+        }
+
+        @keyframes fadeOut {
+            to {
+                opacity: 0;
+                transform: translateY(10px) scale(0.2);
+            }
+        }
+
+        /* Header */
+        .header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 15px 30px;
+            background: rgba(15,15,15,0.85);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--burdeos);
+            z-index: 1000;
+        }
+
+        .logo {
+            font-family: 'Grape Nuts', cursive;
+            font-size: 1.8rem;
+            color: var(--fucsia);
+            text-decoration: none;
+        }
+
+        .nav-desktop {
+            display: flex;
+            gap: 25px;
+        }
+
+        .nav-desktop a {
+            color: var(--blanco);
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 0.95rem;
+            letter-spacing: 1px;
+            transition: color 0.3s;
+        }
+
+        .nav-desktop a:hover,
+        .nav-desktop a.active {
+            color: var(--fucsia);
+        }
+
+        .live-indicator {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: var(--carbon);
+            padding: 6px 14px;
+            border-radius: 20px;
+            border: 1px solid var(--burdeos);
+            font-size: 0.85rem;
+            font-weight: bold;
+        }
+
+        .live-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: #555;
+        }
+        .live-dot.active {
+            background: #ff2a2a;
+            box-shadow: 0 0 8px #ff2a2a;
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.3); }
+            100% { transform: scale(1); }
+        }
+
+        .menu-toggle {
+            display: none;
+            background: none;
+            border: none;
+            color: var(--blanco);
+            font-size: 1.8rem;
+            cursor: pointer;
+        }
+
+        .mobile-menu {
+            display: none;
+            flex-direction: column;
+            background: var(--carbon);
+            padding: 20px;
+            gap: 15px;
+            position: fixed;
+            top: 70px;
+            left: 20px;
+            right: 20px;
+            border-radius: 15px;
+            border: 1px solid var(--burdeos);
+            z-index: 999;
+        }
+        .mobile-menu a {
+            color: var(--blanco);
+            text-decoration: none;
+            font-weight: bold;
+        }
+        .mobile-menu.show {
+            display: flex;
+        }
+
+        @media (max-width: 768px) {
+            .nav-desktop {
+                display: none;
+            }
+            .menu-toggle {
+                display: block;
+            }
+        }
+
+        /* Contenedor principal */
+        .main-container {
+            max-width: 1000px;
+            margin: 100px auto 40px;
+            padding: 0 20px;
+        }
+
+        .back-link {
+            display: inline-block;
+            margin-bottom: 20px;
+            color: var(--fucsia);
+            text-decoration: none;
+            font-weight: bold;
+            transition: all 0.3s;
+        }
+        .back-link:hover {
+            color: #ff77dd;
+            transform: translateX(-3px);
+        }
+
+        /* Hero */
+        .hero-card {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 40px;
+            background: rgba(15,15,15,0.8);
+            backdrop-filter: blur(10px);
+            border: 2px solid var(--burdeos);
+            border-radius: 30px;
+            padding: 40px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-card::before {
+            content: "💀";
+            position: absolute;
+            top: 10px;
+            right: 20px;
+            font-size: 4rem;
+            opacity: 0.15;
+            transform: rotate(15deg);
+        }
+
+        .hero-card::after {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(circle at 80% 20%, rgba(255,68,204,0.1), transparent 60%);
+            pointer-events: none;
+        }
+
+        .hero-image {
+            flex: 0 0 250px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .hero-image img {
+            width: 100%;
+            max-width: 250px;
+            height: auto;
+            border-radius: 50%;
+            border: 5px solid var(--burdeos);
+            box-shadow: 0 0 30px rgba(139,46,46,0.5);
+            background: rgba(15,15,15,0.7);
+            object-fit: contain;
+        }
+
+        .hero-info {
+            flex: 1;
+            min-width: 280px;
+        }
+
+        .hero-name {
+            font-size: clamp(2rem, 8vw, 4rem);
+            font-weight: 900;
+            text-transform: uppercase;
+            color: var(--blanco);
+            text-shadow: 4px 4px 0 var(--burdeos);
+            line-height: 1;
+        }
+
+        .hero-desc {
+            font-family: 'Grape Nuts', cursive;
+            font-size: 1.5rem;
+            color: var(--fucsia);
+            margin-top: 15px;
+        }
+
+        .hero-lore {
+            margin-top: 15px;
+            font-size: 1.1rem;
+            color: #ddd;
+            font-style: italic;
+            line-height: 1.5;
+        }
+
+        /* Chips de gustos/disgustos */
+        .chips-section {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            margin-top: 30px;
+        }
+
+        .chips-box {
+            flex: 1 1 250px;
+            background: rgba(15,15,15,0.7);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--burdeos);
+            border-radius: 20px;
+            padding: 20px;
+        }
+
+        .chips-box h3 {
+            font-size: 1.3rem;
+            font-weight: 900;
+            margin-bottom: 15px;
+        }
+
+        .chips-box.love h3 { color: var(--fucsia); }
+        .chips-box.hate h3 { color: var(--burdeos); }
+
+        .chip-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .chip {
+            background: rgba(15,15,15,0.6);
+            border: 1px solid rgba(139,46,46,0.5);
+            color: var(--blanco);
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .chip:hover {
+            border-color: var(--fucsia);
+            color: var(--fucsia);
+        }
+
+        /* Ficha técnica */
+        .ficha-tecnica {
+            margin-top: 70px;
+        }
+
+        .ficha-title {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .ficha-title h2 {
+            font-size: 2.5rem;
+            font-weight: 900;
+            text-transform: uppercase;
+            color: var(--blanco);
+            text-shadow: 3px 3px 0 var(--burdeos);
+        }
+
+        .ficha-title p {
+            font-size: 1.2rem;
+            color: var(--fucsia);
+            margin-top: 8px;
+        }
+
+        .ficha-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+        }
+
+        .ficha-card {
+            background: rgba(15,15,15,0.7);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--burdeos);
+            border-radius: 20px;
+            padding: 20px;
+            transition: all 0.3s;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        .ficha-card:hover {
+            border-color: var(--fucsia);
+            box-shadow: 0 0 20px rgba(255,68,204,0.3);
+            transform: translateY(-5px);
+        }
+
+        .ficha-header {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 900;
+            font-size: 0.85rem;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            color: var(--fucsia);
+            border-bottom: 1px solid rgba(139,46,46,0.3);
+            padding-bottom: 10px;
+        }
+
+        .ficha-list {
+            list-style: none;
+            padding: 0;
+            font-size: 0.95rem;
+            line-height: 1.5;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .ficha-list li {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(15,15,15,0.5);
+            padding: 10px 12px;
+            border-radius: 10px;
+            border: 1px solid rgba(139,46,46,0.4);
+        }
+
+        .ficha-list .label {
+            color: var(--gris);
+            font-weight: 600;
+        }
+
+        .ficha-list .value {
+            color: var(--blanco);
+            font-weight: 700;
+            text-align: right;
+        }
+
+        .badge-trans {
+            background: rgba(255,68,204,0.15);
+            border: 1px solid var(--fucsia);
+            color: var(--fucsia);
+            padding: 2px 10px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 700;
+        }
+
+        .interest-chips {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .vibra-quote {
+            font-style: italic;
+            color: #ddd;
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+
+        .community-box {
+            background: rgba(15,15,15,0.6);
+            border: 1px solid rgba(139,46,46,0.5);
+            border-radius: 10px;
+            text-align: center;
+            padding: 10px;
+            font-weight: 900;
+            color: var(--fucsia);
+            letter-spacing: 1px;
+            font-size: 0.8rem;
+        }
+
+        .community-box span {
+            display: block;
+            margin-top: 4px;
+            color: var(--burdeos);
+        }
+
+        /* Reproductor de música flotante */
+        #music-player {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: rgba(15,15,15,0.85);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--burdeos);
+            border-radius: 40px;
+            padding: 8px 15px;
+            z-index: 1000;
+            box-shadow: 0 0 20px rgba(255,68,204,0.2);
+        }
+
+        #music-toggle {
+            background: linear-gradient(135deg, var(--fucsia), #b3007a);
+            color: var(--blanco);
+            border: none;
+            border-radius: 50%;
+            width: 45px;
+            height: 45px;
+            font-size: 1.3rem;
+            cursor: pointer;
+            box-shadow: 0 0 15px rgba(255,68,204,0.6);
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        #music-toggle:hover {
+            transform: scale(1.1);
+            box-shadow: 0 0 25px rgba(255,68,204,0.9);
+        }
+
+        #volume-control {
+            width: 100px;
+            cursor: pointer;
+            accent-color: var(--fucsia);
+        }
+
+        .music-title {
+            position: absolute;
+            bottom: calc(100% + 10px);
+            left: 0;
+            max-width: 250px;
+            overflow: hidden;
+            white-space: nowrap;
+            pointer-events: none;
+            font-size: 0.9rem;
+            font-weight: bold;
+            color: var(--fucsia);
+            z-index: 1001;
+        }
+
+        .music-title span {
+            display: inline-block;
+            padding-left: 100%;
+            animation: scrollText 12s linear infinite;
+        }
+
+        @keyframes scrollText {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-100%); }
+        }
+
+        footer {
+            text-align: center;
+            padding: 30px;
+            color: var(--gris);
+            font-size: 0.9rem;
+            border-top: 1px solid var(--burdeos);
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Cursor personalizado -->
+    <div id="cursor-skull">💀</div>
+
+    <!-- HEADER -->
+    <header class="header">
+        <a href="Neri.html" class="logo">Neri Aiko</a>
+        <nav class="nav-desktop">
+            <a href="Neri.html#inicio">Inicio</a>
+            <a href="sobre-mi.html" class="active">Sobre Mí</a>
+            <a href="Neri.html#horario">Horario</a>
+            <a href="Neri.html#contacto">Contacto</a>
+        </nav>
+        <div class="live-indicator" id="liveIndicator">
+            <span class="live-dot" id="liveDot"></span>
+            <span id="liveText">Cargando...</span>
+        </div>
+        <button class="menu-toggle" id="menuToggle" aria-label="Abrir menú">☰</button>
+    </header>
+
+    <!-- MENÚ MÓVIL -->
+    <div class="mobile-menu" id="mobileMenu">
+        <a href="Neri.html#inicio">Inicio</a>
+        <a href="sobre-mi.html">Sobre Mí</a>
+        <a href="Neri.html#horario">Horario</a>
+        <a href="Neri.html#contacto">Contacto</a>
+    </div>
+
+    <!-- CONTENIDO PRINCIPAL -->
+    <main class="main-container">
+        <a href="Neri.html" class="back-link">← Volver al inicio</a>
+
+        <!-- HERO -->
+        <section class="hero-card">
+            <div class="hero-image">
+                <img src="img/Neri.png" alt="Neri Aiko">
+            </div>
+            <div class="hero-info">
+                <h1 class="hero-name">Neri Aiko</h1>
+                <p class="hero-desc">VTuber & Streamer</p>
+                <p class="hero-lore">
+                    Creció bajo la ciudad, entre cables, latas y cartuchos. Su ojo rojo arde como una llama que no se apaga; su ojo dorado guarda el eco de un alma inquieta. No busca problemas… pero si hay queso de por medio, se apunta. Ahora streamea caos controlado desde su madriguera.
+                </p>
+            </div>
+        </section>
+
+        <!-- LO QUE AMO / LO QUE ODIO -->
+        <section class="chips-section">
+            <div class="chips-box love">
+                <h3>🧀 Lo que amo</h3>
+                <div class="chip-list">
+                    <span class="chip">Queso</span>
+                    <span class="chip">Videojuegos</span>
+                    <span class="chip">Ropa oversize</span>
+                    <span class="chip">Grafiti</span>
+                    <span class="chip">Música urbana</span>
+                    <span class="chip">Callejear</span>
+                </div>
+            </div>
+            <div class="chips-box hate">
+                <h3>🤢 Lo que odio</h3>
+                <div class="chip-list">
+                    <span class="chip">Trampas para ratones</span>
+                    <span class="chip">Madrugar</span>
+                    <span class="chip">Queso azul</span>
+                    <span class="chip">Silencio incómodo</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- FICHA TÉCNICA -->
+        <section class="ficha-tecnica">
+            <div class="ficha-title">
+                <h2>Ficha Técnica</h2>
+                <p>Expediente callejero de Neri</p>
+            </div>
+
+            <div class="ficha-grid">
+                <div class="ficha-card">
+                    <div class="ficha-header"><span>🎯</span> PERFIL & IDENTIDAD</div>
+                    <ul class="ficha-list">
+                        <li><span class="label">Nombre</span><span class="value">Neri Aiko</span></li>
+                        <li><span class="label">Género</span><span class="value badge-trans">Chica Trans 🏳️‍⚧️</span></li>
+                        <li><span class="label">Especie</span><span class="value">Chica ratón callejera</span></li>
+                        <li><span class="label">Altura</span><span class="value">1.60 m</span></li>
+                        <li><span class="label">Ubicación</span><span class="value">Ciudad subterránea</span></li>
+                        <li><span class="label">Rol</span><span class="value">VTuber & Streamer</span></li>
+                    </ul>
+                </div>
+
+                <div class="ficha-card">
+                    <div class="ficha-header"><span>✨</span> MIS INTERESES</div>
+                    <div class="interest-chips">
+                        <span class="chip">Queso 🧀</span>
+                        <span class="chip">Videojuegos 🎮</span>
+                        <span class="chip">Ropa oversize 👕</span>
+                        <span class="chip">Grafiti 🎨</span>
+                        <span class="chip">Música urbana 🎵</span>
+                        <span class="chip">Callejear 🌆</span>
+                    </div>
+                </div>
+
+                <div class="ficha-card">
+                    <div class="ficha-header"><span>🌟</span> VIBRA DEL CANAL</div>
+                    <p class="vibra-quote">
+                        "Un rincón underground, auténtico y lleno de actitud. Aquí se celebra la creatividad, el caos controlado y los buenos momentos con la comunidad."
+                    </p>
+                    <div class="community-box">
+                        COMUNIDAD ACTIVA
+                        <span>★ LIVE STREAMING ★</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- REPRODUCTOR -->
+    <div id="music-player">
+        <div class="music-title"><span>Bakusou Yumeuta - Diggy-MO</span></div>
+        <button id="music-toggle" title="Reproducir/Pausar">▶</button>
+        <input type="range" id="volume-control" min="0" max="100" value="50" aria-label="Control de volumen">
+    </div>
+
+    <footer>
+        © 2025 Neri Aiko 💜 Todos los derechos reservados.
+    </footer>
+
+    <script defer>
+        // ===== CURSOR PERSONALIZADO =====
+        const cursorSkull = document.getElementById('cursor-skull');
+        document.addEventListener('mousemove', (e) => {
+            cursorSkull.style.left = e.clientX + 'px';
+            cursorSkull.style.top = e.clientY + 'px';
+        });
+
+        document.addEventListener('mousedown', () => {
+            cursorSkull.classList.add('click-effect');
+        });
+        document.addEventListener('mouseup', () => {
+            cursorSkull.classList.remove('click-effect');
+        });
+
+        // ===== ESTELA DE PARTÍCULAS =====
+        let lastParticleTime = 0;
+        document.addEventListener('mousemove', (e) => {
+            const now = Date.now();
+            if (now - lastParticleTime < 50) return;
+            lastParticleTime = now;
+            const particle = document.createElement('div');
+            particle.className = 'particle';
+            particle.style.left = (e.clientX - 2) + 'px';
+            particle.style.top = (e.clientY - 2) + 'px';
+            document.body.appendChild(particle);
+            setTimeout(() => particle.remove(), 600);
+            const particles = document.querySelectorAll('.particle');
+            if (particles.length > 30) particles[0].remove();
+        });
+
+        // ===== MENÚ MÓVIL =====
+        const menuToggle = document.getElementById('menuToggle');
+        const mobileMenu = document.getElementById('mobileMenu');
+        menuToggle.addEventListener('click', () => mobileMenu.classList.toggle('show'));
+        mobileMenu.querySelectorAll('a').forEach(link => {
+            link.addEventListener('click', () => mobileMenu.classList.remove('show'));
+        });
+
+        // ===== INDICADOR EN VIVO =====
+        const WORKER_URL = 'https://nameless-resonance-e957togi-kirei-stats.togivt.workers.dev/api/stats';
+        async function checkLive() {
+            try {
+                const response = await fetch(WORKER_URL);
+                const data = await response.json();
+                const isLive = data.isLive || false;
+                const liveDot = document.getElementById('liveDot');
+                const liveText = document.getElementById('liveText');
+                if (isLive) {
+                    liveDot.classList.add('active');
+                    liveText.textContent = '🔴 EN DIRECTO AHORA';
+                } else {
+                    liveDot.classList.remove('active');
+                    liveText.textContent = '⚫ No está en directo';
+                }
+            } catch (error) {
+                document.getElementById('liveText').textContent = 'Estado desconocido';
+            }
+        }
+        checkLive();
+        setInterval(checkLive, 60000);
+
+        // ===== MÚSICA DE FONDO =====
+        const music = new Audio('audio/neri-music.mp3');
+        music.loop = true;
+        music.volume = 0.5;
+
+        const musicToggle = document.getElementById('music-toggle');
+        const volumeControl = document.getElementById('volume-control');
+
+        function updateButtonIcon() {
+            if (music.paused) {
+                musicToggle.textContent = '▶';
+            } else {
+                musicToggle.textContent = '⏸';
+            }
+        }
+
+        window.addEventListener('load', () => {
+            music.play().then(() => {
+                updateButtonIcon();
+            }).catch(err => {
+                console.warn('Autoplay bloqueado. Se iniciará con el primer clic en la página.');
+            });
+        });
+
+        let autoplayTried = false;
+        document.addEventListener('click', () => {
+            if (!autoplayTried && music.paused) {
+                music.play().then(() => {
+                    autoplayTried = true;
+                    updateButtonIcon();
+                }).catch(err => console.warn('Error al reproducir.'));
+            }
+        }, { once: true });
+
+        musicToggle.addEventListener('click', () => {
+            if (music.paused) {
+                music.play().then(() => updateButtonIcon()).catch(err => console.warn('No se pudo reproducir.'));
+            } else {
+                music.pause();
+                updateButtonIcon();
+            }
+        });
+
+        volumeControl.addEventListener('input', (e) => {
+            music.volume = e.target.value / 100;
+        });
+
+        music.addEventListener('ended', updateButtonIcon);
+    </script>
+</body>
+</html>
