@@ -46,6 +46,10 @@
             cursor: none;
             position: relative;
             min-height: 100vh;
+            background:
+                radial-gradient(circle at 15% 15%, rgba(139,46,46,0.15), transparent 50%),
+                radial-gradient(circle at 85% 85%, rgba(255,68,204,0.08), transparent 50%),
+                var(--asfalto);
         }
 
         /* Textura de cuadrícula */
@@ -123,6 +127,11 @@
             font-size: 1.8rem;
             color: var(--fucsia);
             text-decoration: none;
+            transition: all 0.3s;
+        }
+
+        .logo:hover {
+            text-shadow: 0 0 10px var(--fucsia);
         }
 
         .nav-desktop {
@@ -136,12 +145,13 @@
             font-weight: 700;
             font-size: 0.95rem;
             letter-spacing: 1px;
-            transition: color 0.3s;
+            transition: color 0.3s, text-shadow 0.3s;
         }
 
         .nav-desktop a:hover,
         .nav-desktop a.active {
             color: var(--fucsia);
+            text-shadow: 0 0 8px var(--fucsia-suave);
         }
 
         .live-indicator {
@@ -235,6 +245,17 @@
             transform: translateX(-3px);
         }
 
+        /* Animación de aparición */
+        .fade-in {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.6s ease, transform 0.6s ease;
+        }
+        .fade-in.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
         /* Hero */
         .hero-card {
             display: flex;
@@ -248,6 +269,13 @@
             padding: 40px;
             position: relative;
             overflow: hidden;
+            box-shadow: 0 0 30px rgba(139,46,46,0.3);
+            transition: all 0.3s;
+        }
+
+        .hero-card:hover {
+            border-color: var(--fucsia);
+            box-shadow: 0 0 40px rgba(255,68,204,0.3);
         }
 
         .hero-card::before {
@@ -258,13 +286,18 @@
             font-size: 4rem;
             opacity: 0.15;
             transform: rotate(15deg);
+            transition: opacity 0.3s;
+        }
+
+        .hero-card:hover::before {
+            opacity: 0.25;
         }
 
         .hero-card::after {
             content: "";
             position: absolute;
             inset: 0;
-            background: radial-gradient(circle at 80% 20%, rgba(255,68,204,0.1), transparent 60%);
+            background: radial-gradient(circle at 80% 20%, rgba(255,68,204,0.15), transparent 60%);
             pointer-events: none;
         }
 
@@ -281,9 +314,14 @@
             height: auto;
             border-radius: 50%;
             border: 5px solid var(--burdeos);
-            box-shadow: 0 0 30px rgba(139,46,46,0.5);
+            box-shadow: 0 0 30px rgba(255,68,204,0.5), 0 0 60px rgba(255,68,204,0.2);
             background: rgba(15,15,15,0.7);
             object-fit: contain;
+            transition: all 0.3s;
+        }
+
+        .hero-card:hover .hero-image img {
+            box-shadow: 0 0 40px rgba(255,68,204,0.7), 0 0 80px rgba(255,68,204,0.3);
         }
 
         .hero-info {
@@ -295,9 +333,12 @@
             font-size: clamp(2rem, 8vw, 4rem);
             font-weight: 900;
             text-transform: uppercase;
-            color: var(--blanco);
-            text-shadow: 4px 4px 0 var(--burdeos);
+            background: linear-gradient(135deg, var(--fucsia), var(--blanco));
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
             line-height: 1;
+            filter: drop-shadow(2px 2px 4px var(--burdeos));
         }
 
         .hero-desc {
@@ -330,6 +371,19 @@
             border: 1px solid var(--burdeos);
             border-radius: 20px;
             padding: 20px;
+            transition: all 0.3s;
+        }
+
+        .chips-box.love:hover {
+            border-color: var(--fucsia);
+            box-shadow: 0 0 20px rgba(255,68,204,0.3);
+            transform: translateY(-5px);
+        }
+
+        .chips-box.hate:hover {
+            border-color: var(--burdeos);
+            box-shadow: 0 0 20px rgba(139,46,46,0.5);
+            transform: translateY(-5px);
         }
 
         .chips-box h3 {
@@ -361,6 +415,7 @@
         .chip:hover {
             border-color: var(--fucsia);
             color: var(--fucsia);
+            transform: scale(1.05);
         }
 
         /* Ficha técnica */
@@ -377,8 +432,11 @@
             font-size: 2.5rem;
             font-weight: 900;
             text-transform: uppercase;
-            color: var(--blanco);
-            text-shadow: 3px 3px 0 var(--burdeos);
+            background: linear-gradient(135deg, var(--fucsia), var(--blanco));
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            filter: drop-shadow(2px 2px 4px var(--burdeos));
         }
 
         .ficha-title p {
@@ -397,6 +455,7 @@
             background: rgba(15,15,15,0.7);
             backdrop-filter: blur(10px);
             border: 1px solid var(--burdeos);
+            border-top: 3px solid var(--fucsia);
             border-radius: 20px;
             padding: 20px;
             transition: all 0.3s;
@@ -406,7 +465,7 @@
         }
         .ficha-card:hover {
             border-color: var(--fucsia);
-            box-shadow: 0 0 20px rgba(255,68,204,0.3);
+            box-shadow: 0 0 25px rgba(255,68,204,0.4);
             transform: translateY(-5px);
         }
 
@@ -441,6 +500,12 @@
             padding: 10px 12px;
             border-radius: 10px;
             border: 1px solid rgba(139,46,46,0.4);
+            transition: background 0.3s, border-color 0.3s;
+        }
+
+        .ficha-list li:hover {
+            background: rgba(30,30,30,0.8);
+            border-color: var(--fucsia-suave);
         }
 
         .ficha-list .label {
@@ -487,6 +552,12 @@
             color: var(--fucsia);
             letter-spacing: 1px;
             font-size: 0.8rem;
+            transition: all 0.3s;
+        }
+
+        .community-box:hover {
+            border-color: var(--fucsia);
+            box-shadow: 0 0 15px rgba(255,68,204,0.3);
         }
 
         .community-box span {
@@ -503,13 +574,19 @@
             display: flex;
             align-items: center;
             gap: 10px;
-            background: rgba(15,15,15,0.85);
+            background: rgba(15,15,15,0.9);
             backdrop-filter: blur(10px);
             border: 1px solid var(--burdeos);
             border-radius: 40px;
             padding: 8px 15px;
             z-index: 1000;
             box-shadow: 0 0 20px rgba(255,68,204,0.2);
+            transition: all 0.3s;
+        }
+
+        #music-player:hover {
+            border-color: var(--fucsia);
+            box-shadow: 0 0 25px rgba(255,68,204,0.4);
         }
 
         #music-toggle {
@@ -582,7 +659,7 @@
     <header class="header">
         <a href="index.html" class="logo">Neri Aiko</a>
         <nav class="nav-desktop">
-            <a href="index.html">Inicio</a>   <!-- Ahora sin #inicio -->
+            <a href="index.html">Inicio</a>
             <a href="sobre-mi.html" class="active">Sobre Mí</a>
             <a href="index.html#horario">Horario</a>
             <a href="index.html#contacto">Contacto</a>
@@ -596,7 +673,7 @@
 
     <!-- MENÚ MÓVIL -->
     <div class="mobile-menu" id="mobileMenu">
-        <a href="index.html">Inicio</a>   <!-- Ahora sin #inicio -->
+        <a href="index.html">Inicio</a>
         <a href="sobre-mi.html">Sobre Mí</a>
         <a href="index.html#horario">Horario</a>
         <a href="index.html#contacto">Contacto</a>
@@ -604,10 +681,10 @@
 
     <!-- CONTENIDO PRINCIPAL -->
     <main class="main-container">
-        <a href="index.html" class="back-link">← Volver al inicio</a>
+        <a href="index.html" class="back-link fade-in">← Volver al inicio</a>
 
         <!-- HERO -->
-        <section class="hero-card">
+        <section class="hero-card fade-in">
             <div class="hero-image">
                 <img src="img/Neri.png" alt="Neri Aiko">
             </div>
@@ -621,7 +698,7 @@
         </section>
 
         <!-- LO QUE AMO / LO QUE ODIO -->
-        <section class="chips-section">
+        <section class="chips-section fade-in">
             <div class="chips-box love">
                 <h3>🧀 Lo que amo</h3>
                 <div class="chip-list">
@@ -645,7 +722,7 @@
         </section>
 
         <!-- FICHA TÉCNICA -->
-        <section class="ficha-tecnica">
+        <section class="ficha-tecnica fade-in">
             <div class="ficha-title">
                 <h2>Ficha Técnica</h2>
                 <p>Expediente callejero de Neri</p>
@@ -762,6 +839,17 @@
         }
         checkLive();
         setInterval(checkLive, 60000);
+
+        // ===== ANIMACIÓN DE APARICIÓN =====
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, { threshold: 0.1 });
+
+        document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
 
         // ===== MÚSICA DE FONDO =====
         const music = new Audio('audio/neri-music.mp3');
