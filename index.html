@@ -10,7 +10,7 @@
     <meta property="og:title" content="Neri Aiko ★ VTuber & Streamer">
     <meta property="og:description" content="Neri Aiko, VTuber roedora urbana. Directos en Twitch, arte callejero y mucho queso.">
     <meta property="og:image" content="img/Neri.png">
-    <meta property="og:url" content="https://neriaiko.com">
+    <meta property="og:url" content="https://nerivaleryvt-afk.github.io/NeriAiko/">
     <meta name="twitter:card" content="summary_large_image">
 
     <!-- Icono -->
@@ -42,12 +42,11 @@
             color: var(--blanco);
             font-family: 'Rubik', sans-serif;
             overflow-x: hidden;
-            cursor: none; /* Ocultamos cursor nativo para usar calaverita */
+            cursor: none;
             position: relative;
             min-height: 100vh;
         }
 
-        /* Textura de cuadrícula */
         body::before {
             content: "";
             position: fixed;
@@ -62,7 +61,6 @@
             z-index: -1;
         }
 
-        /* Cursor personalizado: calaverita */
         #cursor-skull {
             position: fixed;
             top: 0;
@@ -82,7 +80,6 @@
             transform: translate(-50%, -50%) scale(0.8);
         }
 
-        /* Estela de partículas fucsia */
         .particle {
             position: fixed;
             width: 5px;
@@ -101,7 +98,6 @@
             }
         }
 
-        /* Header fijo */
         .header {
             position: fixed;
             top: 0;
@@ -213,7 +209,6 @@
             }
         }
 
-        /* Hero */
         .hero {
             min-height: 100vh;
             display: flex;
@@ -330,7 +325,6 @@
             transform: translateY(-5px);
         }
 
-        /* Horario */
         .schedule-card {
             display: flex;
             flex-direction: column;
@@ -356,7 +350,6 @@
             color: var(--gris);
         }
 
-        /* Próximo directo */
         .next-stream-card {
             margin-top: 30px;
             background: rgba(15,15,15,0.8);
@@ -365,7 +358,10 @@
             padding: 20px;
             text-align: center;
             box-shadow: 0 0 20px rgba(255,68,204,0.3);
+            position: relative;
+            overflow: hidden;
         }
+
         .next-stream-label {
             font-size: 1rem;
             font-weight: 900;
@@ -374,6 +370,27 @@
             color: var(--fucsia);
             margin-bottom: 10px;
         }
+
+        .countdown-wrapper {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .skull-left,
+        .skull-right {
+            font-size: 3rem;
+            opacity: 0.3;
+            transform: rotate(15deg);
+            pointer-events: none;
+            filter: drop-shadow(0 0 8px var(--fucsia));
+        }
+
+        .skull-right {
+            transform: rotate(-15deg);
+        }
+
         #next-stream-countdown {
             font-size: 2rem;
             font-weight: 900;
@@ -381,7 +398,6 @@
             letter-spacing: 1px;
         }
 
-        /* Cola de ratón separadora */
         .mouse-tail-divider {
             height: 120px;
             background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 120"><path d="M50 0 Q60 30 45 60 Q30 90 50 120" stroke="%238b2e2e" fill="none" stroke-width="3" stroke-dasharray="5 5"/></svg>') repeat-x;
@@ -401,15 +417,13 @@
 </head>
 <body>
 
-    <!-- Cursor personalizado -->
     <div id="cursor-skull">💀</div>
 
-    <!-- HEADER -->
     <header class="header">
         <a href="#inicio" class="logo">Neri Aiko</a>
         <nav class="nav-desktop">
             <a href="#inicio">Inicio</a>
-            <a href="sobre-mi.html">Sobre Mí</a>
+            <a href="sobre.mi.html">Sobre Mí</a>
             <a href="#horario">Horario</a>
             <a href="#contacto">Contacto</a>
         </nav>
@@ -420,15 +434,13 @@
         <button class="menu-toggle" id="menuToggle" aria-label="Abrir menú">☰</button>
     </header>
 
-    <!-- MENÚ MÓVIL -->
     <div class="mobile-menu" id="mobileMenu">
         <a href="#inicio">Inicio</a>
-        <a href="sobre-mi.html">Sobre Mí</a>
+        <a href="sobre.mi.html">Sobre Mí</a>
         <a href="#horario">Horario</a>
         <a href="#contacto">Contacto</a>
     </div>
 
-    <!-- HERO -->
     <section class="hero" id="inicio">
         <div class="hero-content">
             <h1 class="hero-title">¡Bienvenido a la madriguera!</h1>
@@ -440,30 +452,35 @@
         </div>
     </section>
 
-    <!-- HORARIO -->
     <section class="section" id="horario">
         <h2 class="section-title">Horario de Directos</h2>
         <div class="card-grid" id="schedule-list"></div>
 
-        <!-- Próximo directo -->
         <div class="next-stream-card">
             <div class="next-stream-label">Próximo directo</div>
-            <div id="next-stream-countdown">Calculando...</div>
+            <div class="countdown-wrapper">
+                <span class="skull-left">💀</span>
+                <div id="next-stream-countdown">Calculando...</div>
+                <span class="skull-right">💀</span>
+            </div>
         </div>
     </section>
 
-    <!-- CONTACTO (placeholder) -->
     <section class="section" id="contacto">
         <h2 class="section-title">Contacto</h2>
         <p>Próximamente podrás ponerte en contacto con Neri. ¡Mantente atento!</p>
     </section>
 
-    <!-- Separador -->
     <div class="mouse-tail-divider"></div>
 
     <footer>
         © 2025 Neri Aiko 💜 Todos los derechos reservados.
     </footer>
+
+    <!-- Firebase App (compat) -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <!-- Firestore -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
 
     <script defer>
         // ===== CURSOR PERSONALIZADO =====
@@ -535,20 +552,7 @@
         checkLive();
         setInterval(checkLive, 60000);
 
-        // ===== HORARIO DINÁMICO =====
-        // Horarios definidos en UTC (día 0=domingo, 1=lunes, ...)
-        // Lunes 20:00 El Salvador (UTC-6) -> Martes 02:00 UTC
-        // Miércoles 20:00 El Salvador -> Jueves 02:00 UTC
-        // Viernes 21:00 El Salvador -> Sábado 03:00 UTC
-        // Domingo 18:00 El Salvador -> Lunes 00:00 UTC
-        const streams = [
-            { day: 2, hour: 2, minute: 0 },  // martes 02:00 UTC -> lunes 20:00 El Salvador
-            { day: 4, hour: 2, minute: 0 },  // jueves 02:00 UTC -> miércoles 20:00 El Salvador
-            { day: 6, hour: 3, minute: 0 },  // sábado 03:00 UTC -> viernes 21:00 El Salvador
-            { day: 1, hour: 0, minute: 0 }   // lunes 00:00 UTC -> domingo 18:00 El Salvador
-        ];
-
-        // Variables para el país del visitante
+        // ===== HORARIO DINÁMICO CON FIREBASE =====
         let visitorCountry = null;
         let visitorCountryCode = null;
 
@@ -564,9 +568,8 @@
                 visitorCountry = data.country_name || null;
                 visitorCountryCode = data.country_code || null;
             } catch (error) {
-                console.error('No se pudo obtener el país del visitante:', error);
+                console.error('No se pudo obtener el país:', error);
             }
-            // Re-renderizar horario con el país actualizado
             renderSchedule();
         }
 
@@ -601,30 +604,33 @@
             const daysShort = ['DOM', 'LUN', 'MAR', 'MIÉ', 'JUE', 'VIE', 'SÁB'];
             scheduleList.innerHTML = '';
 
+            // Ordenar por día local de El Salvador
+            streams.sort((a, b) => {
+                const dayA = (a.day + 6) % 7;
+                const dayB = (b.day + 6) % 7;
+                return dayA - dayB;
+            });
+
             streams.forEach(stream => {
-                // Crear una fecha de referencia (hoy) para el día correcto
                 const now = new Date();
                 let targetDate = new Date(now);
                 targetDate.setUTCDate(now.getUTCDate() + ((stream.day - now.getUTCDay() + 7) % 7));
                 targetDate.setUTCHours(stream.hour, stream.minute, 0, 0);
 
-                // Hora de El Salvador (UTC-6)
-                const elSalvadorDate = new Date(targetDate);
-                const elSalvadorTime = elSalvadorDate.toLocaleTimeString('es-SV', {
+                const elSalvadorTime = targetDate.toLocaleTimeString('es-SV', {
                     hour: '2-digit',
                     minute: '2-digit',
                     timeZone: 'America/El_Salvador'
                 });
 
-                // Hora local del visitante
                 const visitorTime = targetDate.toLocaleTimeString([], {
                     hour: '2-digit',
                     minute: '2-digit'
                 });
 
-                const dayName = daysShort[stream.day];
+                const localDay = (stream.day + 6) % 7;
+                const dayName = daysShort[localDay];
 
-                // Determinar bandera y país para mostrar
                 const flag = visitorCountryCode ? getFlagEmoji(visitorCountryCode) : '🌐';
                 const countryDisplay = visitorCountry || 'tu hora';
 
@@ -642,7 +648,7 @@
         }
 
         function updateCountdown() {
-            const { stream, date } = getNextStream();
+            const { date } = getNextStream();
             const countdownEl = document.getElementById('next-stream-countdown');
             if (!date) {
                 countdownEl.textContent = 'Sin directos programados';
@@ -660,13 +666,40 @@
             countdownEl.textContent = `${days}d ${hours}h ${minutes}m ${seconds}s`;
         }
 
-        // Iniciar horario
-        renderSchedule();
-        updateCountdown();
-        setInterval(updateCountdown, 1000);
+        // ===== FIREBASE =====
+        const firebaseConfig = {
+            apiKey: "AIzaSyB_lzGjYnFFkPuuzJ-uYKKcnFzBMKQTUyA",
+            authDomain: "neri-aiko-web.firebaseapp.com",
+            projectId: "neri-aiko-web",
+            storageBucket: "neri-aiko-web.firebasestorage.app",
+            messagingSenderId: "348092738723",
+            appId: "1:348092738723:web:6346ebf79d7beaddd2e316",
+            measurementId: "G-0QD3GETDGR"
+        };
 
-        // Obtener país del visitante (actualizará el horario al completarse)
-        fetchVisitorCountry();
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
+
+        let streams = [];
+
+        async function loadStreamsFromFirestore() {
+            try {
+                const snapshot = await db.collection('streams').get();
+                streams = [];
+                snapshot.forEach(doc => {
+                    streams.push(doc.data());
+                });
+                renderSchedule();
+                updateCountdown();
+                setInterval(updateCountdown, 1000);
+                fetchVisitorCountry();
+            } catch (error) {
+                console.error('Error cargando horarios:', error);
+                document.getElementById('next-stream-countdown').textContent = 'Error al cargar horarios';
+            }
+        }
+
+        loadStreamsFromFirestore();
     </script>
 </body>
 </html>
