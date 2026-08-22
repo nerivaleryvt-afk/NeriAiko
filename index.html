@@ -19,8 +19,8 @@
     <!-- Fuentes -->
     <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;700;900&family=Grape+Nuts&display=swap" rel="stylesheet">
 
-    <!-- Font Awesome para iconos de marcas -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Font Awesome actualizado para icono X y TikTok -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 
     <style>
         :root {
@@ -271,6 +271,7 @@
             display: flex;
             gap: 15px;
             margin-top: 20px;
+            flex-wrap: wrap;
         }
 
         .hero-socials a {
@@ -529,12 +530,14 @@
             <p class="hero-subtitle">Neri Aiko · VTuber & Streamer</p>
             <p class="hero-tagline">"Queso, caos y directos desde la madriguera"</p>
             <div class="hero-socials">
-                <a href="#" target="_blank" title="Twitch" aria-label="Twitch"><i class="fa-brands fa-twitch"></i></a>
-                <a href="#" target="_blank" title="Twitter / X" aria-label="Twitter / X"><i class="fa-brands fa-x-twitter"></i></a>
-                <a href="#" target="_blank" title="Instagram" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a>
-                <a href="#" target="_blank" title="Discord" aria-label="Discord"><i class="fa-brands fa-discord"></i></a>
+                <a href="https://www.twitch.tv/neriaiko" target="_blank" title="Twitch" aria-label="Twitch"><i class="fa-brands fa-twitch"></i></a>
+                <a href="https://x.com/NeriAikoVT" target="_blank" title="X / Twitter" aria-label="X / Twitter"><i class="fa-brands fa-x-twitter"></i></a>
+                <a href="https://www.instagram.com/neriaikovt/?hl=es" target="_blank" title="Instagram" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a>
+                <a href="https://discord.gg/wYd94SweYs" target="_blank" title="Discord" aria-label="Discord"><i class="fa-brands fa-discord"></i></a>
+                <a href="https://www.tiktok.com/@neriaiko" target="_blank" title="TikTok" aria-label="TikTok"><i class="fa-brands fa-tiktok"></i></a>
             </div>
             <a href="https://www.twitch.tv/neriaiko" target="_blank" class="hero-btn">VER EN TWITCH</a>
+            <a href="https://www.tiktok.com/@neriaiko" target="_blank" class="hero-btn" style="margin-left:10px;">VER EN TIKTOK</a>
         </div>
         <div class="hero-art">
             <img src="img/Neri.png" alt="Neri Aiko" loading="eager" decoding="async">
@@ -694,7 +697,6 @@
             const daysShort = ['DOM', 'LUN', 'MAR', 'MIÉ', 'JUE', 'VIE', 'SÁB'];
             scheduleList.innerHTML = '';
 
-            // Ordenar por día local de El Salvador
             streams.sort((a, b) => {
                 const dayA = (a.day + 6) % 7;
                 const dayB = (b.day + 6) % 7;
