@@ -568,7 +568,7 @@
                 <li>¡Listo! Recibirás una alerta cuando Neri esté en vivo.</li>
             </ol>
             <button id="btn-copiar-extensiones" class="hero-btn" style="margin-top:20px; width:100%;">COPIAR URL DE EXTENSIONES</button>
-            <p id="mensaje-copiado" style="margin-top:10px; font-size:0.8rem; color:var(--fucsia); display:none;">✅ URL copiada al portapapeles</p>
+            <p id="mensaje-copiado" style="margin-top:10px; font-size:0.8rem; color:var(--fucsia); display:none;"></p>
         </div>
     </section>
 
@@ -637,13 +637,28 @@
 
         // ===== BOTÓN COPIAR URL DE EXTENSIONES =====
         document.getElementById('btn-copiar-extensiones').addEventListener('click', () => {
-            navigator.clipboard.writeText('chrome://extensions/').then(() => {
+            const url = 'chrome://extensions/';
+            const textArea = document.createElement('textarea');
+            textArea.value = url;
+            textArea.style.position = 'fixed';
+            textArea.style.left = '-9999px';
+            document.body.appendChild(textArea);
+            textArea.select();
+            textArea.setSelectionRange(0, 99999);
+            try {
+                const success = document.execCommand('copy');
                 const mensaje = document.getElementById('mensaje-copiado');
+                if (success) {
+                    mensaje.textContent = '✅ URL copiada: ' + url;
+                } else {
+                    mensaje.textContent = 'No se pudo copiar automáticamente. Copia manualmente: ' + url;
+                }
                 mensaje.style.display = 'block';
-                setTimeout(() => { mensaje.style.display = 'none'; }, 3000);
-            }).catch(err => {
+                setTimeout(() => { mensaje.style.display = 'none'; }, 5000);
+            } catch (err) {
                 console.error('Error al copiar:', err);
-            });
+            }
+            document.body.removeChild(textArea);
         });
 
         // ===== INDICADOR EN VIVO =====
