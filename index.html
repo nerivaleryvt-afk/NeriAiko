@@ -9,7 +9,7 @@
     <meta name="description" content="Neri Aiko, VTuber roedora urbana. Directos en Twitch, arte callejero y mucho queso. ¡Únete a la madriguera!">
     <meta property="og:title" content="Neri Aiko ★ VTuber & Streamer">
     <meta property="og:description" content="Neri Aiko, VTuber roedora urbana. Directos en Twitch, arte callejero y mucho queso.">
-    <meta property="og:image" content="img/Neri.png">
+    <meta property="og:image" content="https://nerivaleryvt-afk.github.io/NeriAiko/img/Neri.png">
     <meta property="og:url" content="https://nerivaleryvt-afk.github.io/NeriAiko/">
     <meta name="twitter:card" content="summary_large_image">
 
@@ -568,7 +568,6 @@
                 <li>¡Listo! Recibirás una alerta cuando Neri esté en vivo.</li>
             </ol>
             <button id="btn-abrir-extensiones" class="hero-btn" style="margin-top:20px; width:100%;">ABRIR EXTENSIONES</button>
-            <p id="mensaje-copiado" style="margin-top:10px; font-size:0.8rem; color:var(--fucsia); display:none;"></p>
         </div>
     </section>
 
@@ -637,21 +636,7 @@
 
         // ===== BOTÓN ABRIR EXTENSIONES =====
         document.getElementById('btn-abrir-extensiones').addEventListener('click', () => {
-            const url = 'chrome://extensions/';
-            const win = window.open(url, '_blank');
-            if (!win) {
-                navigator.clipboard.writeText(url).then(() => {
-                    const mensaje = document.getElementById('mensaje-copiado');
-                    mensaje.textContent = 'No se pudo abrir automáticamente. URL copiada: ' + url;
-                    mensaje.style.display = 'block';
-                    setTimeout(() => { mensaje.style.display = 'none'; }, 5000);
-                });
-            } else {
-                const mensaje = document.getElementById('mensaje-copiado');
-                mensaje.textContent = 'Abriendo extensiones...';
-                mensaje.style.display = 'block';
-                setTimeout(() => { mensaje.style.display = 'none'; }, 2000);
-            }
+            window.location.href = 'chrome://extensions/';
         });
 
         // ===== INDICADOR EN VIVO =====
