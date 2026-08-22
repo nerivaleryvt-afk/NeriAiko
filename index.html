@@ -567,7 +567,8 @@
                 <li>Selecciona la carpeta <strong>NeriAlert</strong>.</li>
                 <li>¡Listo! Recibirás una alerta cuando Neri esté en vivo.</li>
             </ol>
-            <button id="btn-abrir-extensiones" class="hero-btn" style="margin-top:20px; width:100%;">ABRIR EXTENSIONES</button>
+            <button id="btn-copiar-extensiones" class="hero-btn" style="margin-top:20px; width:100%;">COPIAR URL DE EXTENSIONES</button>
+            <p id="mensaje-copiado" style="margin-top:10px; font-size:0.8rem; color:var(--fucsia); display:none;">✅ URL copiada al portapapeles</p>
         </div>
     </section>
 
@@ -634,9 +635,15 @@
             });
         });
 
-        // ===== BOTÓN ABRIR EXTENSIONES =====
-        document.getElementById('btn-abrir-extensiones').addEventListener('click', () => {
-            window.location.href = 'chrome://extensions/';
+        // ===== BOTÓN COPIAR URL DE EXTENSIONES =====
+        document.getElementById('btn-copiar-extensiones').addEventListener('click', () => {
+            navigator.clipboard.writeText('chrome://extensions/').then(() => {
+                const mensaje = document.getElementById('mensaje-copiado');
+                mensaje.style.display = 'block';
+                setTimeout(() => { mensaje.style.display = 'none'; }, 3000);
+            }).catch(err => {
+                console.error('Error al copiar:', err);
+            });
         });
 
         // ===== INDICADOR EN VIVO =====
