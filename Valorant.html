@@ -1,0 +1,789 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Valorant ★ Neri Aiko</title>
+
+    <!-- SEO -->
+    <meta name="description" content="Perfil de Valorant de Neri Aiko. Rango, estadísticas, armas favoritas, mapas e historial de partidas.">
+    <meta property="og:title" content="Valorant ★ Neri Aiko">
+    <meta property="og:description" content="Perfil de Valorant de Neri Aiko. Rango, estadísticas, armas favoritas, mapas e historial.">
+    <meta property="og:image" content="me/Neri.jpg">
+    <meta property="og:url" content="https://togikirei.lat/valorant">
+    <meta name="twitter:card" content="summary_large_image">
+
+    <!-- Icono -->
+    <link rel="icon" href="me/Neri.jpg">
+
+    <!-- Fuentes -->
+    <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;700;900&family=Grape+Nuts&display=swap" rel="stylesheet">
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <style>
+        :root {
+            --asfalto: #1a1a1a;
+            --carbon: #0f0f0f;
+            --burdeos: #8b2e2e;
+            --fucsia: #ff44cc;
+            --fucsia-suave: rgba(255, 68, 204, 0.6);
+            --blanco: #f5f0eb;
+            --gris: #aaa;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: var(--asfalto);
+            color: var(--blanco);
+            font-family: 'Rubik', sans-serif;
+            overflow-x: hidden;
+            cursor: none;
+            position: relative;
+            min-height: 100vh;
+            background:
+                radial-gradient(circle at 15% 15%, rgba(139,46,46,0.15), transparent 50%),
+                radial-gradient(circle at 85% 85%, rgba(255,68,204,0.08), transparent 50%),
+                var(--asfalto);
+        }
+
+        body::before {
+            content: "";
+            position: fixed;
+            inset: 0;
+            background-image: 
+                repeating-linear-gradient(45deg, 
+                    rgba(139,46,46,0.05) 0px, 
+                    rgba(139,46,46,0.05) 2px, 
+                    transparent 2px, 
+                    transparent 8px);
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        #cursor-skull {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 40px;
+            height: 40px;
+            pointer-events: none;
+            z-index: 10000;
+            font-size: 30px;
+            line-height: 1;
+            transform: translate(-50%, -50%);
+            transition: transform 0.1s ease;
+            filter: drop-shadow(0 0 6px var(--fucsia));
+        }
+
+        #cursor-skull.click-effect {
+            transform: translate(-50%, -50%) scale(0.8);
+        }
+
+        .particle {
+            position: fixed;
+            width: 5px;
+            height: 5px;
+            background: var(--fucsia);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 9999;
+            animation: fadeOut 0.6s linear forwards;
+        }
+
+        @keyframes fadeOut {
+            to {
+                opacity: 0;
+                transform: translateY(10px) scale(0.2);
+            }
+        }
+
+        .header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 15px 30px;
+            background: rgba(15,15,15,0.85);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--burdeos);
+            z-index: 1000;
+        }
+
+        .logo {
+            font-family: 'Grape Nuts', cursive;
+            font-size: 1.8rem;
+            color: var(--fucsia);
+            text-decoration: none;
+        }
+
+        .nav-desktop {
+            display: flex;
+            gap: 25px;
+        }
+
+        .nav-desktop a {
+            color: var(--blanco);
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 0.95rem;
+            letter-spacing: 1px;
+            transition: color 0.3s;
+        }
+
+        .nav-desktop a:hover,
+        .nav-desktop a.active {
+            color: var(--fucsia);
+        }
+
+        .menu-toggle {
+            display: none;
+            background: none;
+            border: none;
+            color: var(--blanco);
+            font-size: 1.8rem;
+            cursor: pointer;
+        }
+
+        .mobile-menu {
+            display: none;
+            flex-direction: column;
+            background: var(--carbon);
+            padding: 20px;
+            gap: 15px;
+            position: fixed;
+            top: 70px;
+            left: 20px;
+            right: 20px;
+            border-radius: 15px;
+            border: 1px solid var(--burdeos);
+            z-index: 999;
+        }
+        .mobile-menu a {
+            color: var(--blanco);
+            text-decoration: none;
+            font-weight: bold;
+        }
+        .mobile-menu.show {
+            display: flex;
+        }
+
+        @media (max-width: 768px) {
+            .nav-desktop { display: none; }
+            .menu-toggle { display: block; }
+        }
+
+        .main-container {
+            max-width: 1100px;
+            margin: 100px auto 40px;
+            padding: 0 20px;
+        }
+
+        .back-link {
+            display: inline-block;
+            margin-bottom: 20px;
+            color: var(--fucsia);
+            text-decoration: none;
+            font-weight: bold;
+            transition: all 0.3s;
+        }
+        .back-link:hover {
+            color: #ff77dd;
+            transform: translateX(-3px);
+        }
+
+        .fade-in {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.6s ease, transform 0.6s ease;
+        }
+        .fade-in.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .card {
+            background: rgba(15,15,15,0.7);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--burdeos);
+            border-radius: 20px;
+            padding: 20px;
+            transition: all 0.3s;
+        }
+        .card:hover {
+            border-color: var(--fucsia);
+            box-shadow: 0 0 20px rgba(255,68,204,0.3);
+            transform: translateY(-5px);
+        }
+
+        .section-title {
+            font-size: 1.5rem;
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 20px;
+            color: var(--blanco);
+            position: relative;
+        }
+        .section-title::after {
+            content: "";
+            display: block;
+            width: 60px;
+            height: 3px;
+            background: var(--fucsia);
+            margin-top: 6px;
+            box-shadow: 0 0 10px var(--fucsia);
+        }
+
+        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+        .grid-3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; }
+        .grid-4 { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 15px; }
+
+        @media (max-width: 768px) {
+            .grid-2 { grid-template-columns: 1fr; }
+        }
+
+        .stat-box {
+            background: rgba(15,15,15,0.6);
+            border: 1px solid rgba(139,46,46,0.5);
+            border-radius: 15px;
+            padding: 15px;
+            text-align: center;
+        }
+        .stat-box .label {
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--gris);
+            font-weight: 700;
+        }
+        .stat-box .value {
+            font-size: 1.4rem;
+            font-weight: 900;
+            margin-top: 5px;
+            color: var(--blanco);
+        }
+
+        .chip {
+            background: rgba(15,15,15,0.6);
+            border: 1px solid rgba(139,46,46,0.5);
+            color: var(--blanco);
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+        .chip:hover {
+            border-color: var(--fucsia);
+            color: var(--fucsia);
+            transform: scale(1.05);
+        }
+
+        .match-card {
+            background: rgba(15,15,15,0.7);
+            border: 1px solid var(--burdeos);
+            border-radius: 15px;
+            padding: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 15px;
+            flex-wrap: wrap;
+            transition: all 0.3s;
+        }
+        .match-card:hover {
+            border-color: var(--fucsia);
+            box-shadow: 0 0 15px rgba(255,68,204,0.2);
+        }
+
+        .badge {
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            letter-spacing: 1px;
+        }
+        .badge-win { background: rgba(255,68,204,0.15); border: 1px solid var(--fucsia); color: var(--fucsia); }
+        .badge-loss { background: rgba(139,46,46,0.2); border: 1px solid var(--burdeos); color: #ff9999; }
+
+        .weapon-bar, .map-winbar {
+            height: 4px;
+            border-radius: 9999px;
+            background-color: rgba(255,255,255,0.1);
+            overflow: hidden;
+        }
+        .weapon-bar-fill, .map-winbar-fill {
+            height: 100%;
+            border-radius: 9999px;
+            background: linear-gradient(90deg, var(--fucsia), var(--burdeos));
+        }
+
+        .filter-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            border-radius: 0.75rem;
+            font-weight: 700;
+            font-size: 0.75rem;
+            letter-spacing: 0.05em;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            border: 1px solid transparent;
+            background: transparent;
+            color: var(--gris);
+        }
+        .filter-btn.active {
+            background-color: var(--fucsia);
+            color: var(--carbon);
+            box-shadow: 0 4px 15px rgba(255,105,180,0.3);
+        }
+        .filter-btn:not(.active):hover {
+            color: var(--blanco);
+            border-color: var(--fucsia);
+        }
+
+        .weapon-img {
+            width: 60px;
+            height: 40px;
+            object-fit: contain;
+            filter: drop-shadow(0 0 5px rgba(255,68,204,0.3));
+        }
+
+        .map-bg {
+            background-size: cover;
+            background-position: center;
+            position: relative;
+            overflow: hidden;
+            border-radius: 12px;
+            padding: 15px;
+            border: 1px solid var(--burdeos);
+        }
+        .map-bg::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(to right, rgba(15,15,15,0.9), rgba(15,15,15,0.4));
+            z-index: 0;
+        }
+        .map-bg > * {
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero-bg {
+            background-image: url('me/Neri.jpg');
+            background-size: cover;
+            background-position: center;
+            position: relative;
+            border-radius: 20px;
+            overflow: hidden;
+        }
+        .hero-bg::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(to bottom, rgba(15,15,15,0.7), rgba(15,15,15,0.9));
+        }
+        .hero-bg > * {
+            position: relative;
+            z-index: 1;
+        }
+
+        footer {
+            text-align: center;
+            padding: 30px;
+            color: var(--gris);
+            font-size: 0.9rem;
+            border-top: 1px solid var(--burdeos);
+            margin-top: 60px;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="cursor-skull">💀</div>
+
+    <!-- HEADER -->
+    <header class="header">
+        <a href="index.html" class="logo">Neri Aiko</a>
+        <nav class="nav-desktop">
+            <a href="index.html">Inicio</a>
+            <a href="sobre.mi.html">Sobre Mí</a>
+            <a href="valorant.html" class="active">Valorant</a>
+            <a href="index.html#contacto">Contacto</a>
+        </nav>
+        <button class="menu-toggle" id="menuToggle" aria-label="Abrir menú">☰</button>
+    </header>
+
+    <!-- MENÚ MÓVIL -->
+    <div class="mobile-menu" id="mobileMenu">
+        <a href="index.html">Inicio</a>
+        <a href="sobre.mi.html">Sobre Mí</a>
+        <a href="valorant.html">Valorant</a>
+        <a href="index.html#contacto">Contacto</a>
+    </div>
+
+    <!-- CONTENIDO -->
+    <main class="main-container">
+        <a href="index.html" class="back-link fade-in">← Volver al inicio</a>
+
+        <!-- HERO VALORANT -->
+        <section class="hero-bg card fade-in" style="text-align:center; padding:40px 20px;">
+            <img src="me/Neri.jpg" alt="Neri Aiko" style="width:80px;height:80px;border-radius:50%;border:3px solid var(--fucsia);box-shadow:0 0 20px var(--fucsia);object-fit:cover;">
+            <h1 class="section-title" style="font-size:2rem;">VALORANT TRACKER</h1>
+            <p style="font-family:'Grape Nuts',cursive; font-size:1.5rem; color:var(--fucsia);">Neri Aiko · Main Clove</p>
+            <div style="display:flex; gap:10px; justify-content:center; margin-top:15px; flex-wrap:wrap;">
+                <span class="chip">Región: NA</span>
+                <span class="chip">Nivel: 37</span>
+                <span class="chip" id="api-status">Conectando...</span>
+            </div>
+        </section>
+
+        <!-- RANGO Y ESTADÍSTICAS GENERALES -->
+        <section class="fade-in" style="margin-top:30px;">
+            <h2 class="section-title">Rango y Rendimiento</h2>
+            <div class="grid-2">
+                <div class="card">
+                    <div class="stat-box">
+                        <div class="label">Rango Actual</div>
+                        <img src="valorant/Der_Rang_„Silber_II“.webp" alt="Silver 2" style="width:60px;height:60px;object-fit:contain;margin:10px auto;">
+                        <div class="value" id="val-rank">Cargando...</div>
+                        <div id="val-rr" style="color:var(--gris);">-- RR</div>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="grid-3">
+                        <div class="stat-box">
+                            <div class="label">K/D Ratio</div>
+                            <div class="value">1.05</div>
+                        </div>
+                        <div class="stat-box">
+                            <div class="label">Headshot %</div>
+                            <div class="value" style="color:var(--fucsia);">18.4%</div>
+                        </div>
+                        <div class="stat-box">
+                            <div class="label">Win %</div>
+                            <div class="value">50.8%</div>
+                        </div>
+                        <div class="stat-box">
+                            <div class="label">ACS</div>
+                            <div class="value" style="color:#ffd700;">215.3</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- TOP WEAPONS Y MAPAS -->
+        <section class="fade-in" style="margin-top:30px;">
+            <div class="grid-2">
+                <!-- Armas -->
+                <div class="card">
+                    <h2 class="section-title">Top Weapons</h2>
+                    <div style="display:flex; flex-direction:column; gap:15px;">
+                        <div style="display:flex; align-items:center; gap:10px;">
+                            <img src="armas/Prime_Vandal.png" alt="Vandal" class="weapon-img">
+                            <div style="flex:1;">
+                                <div style="display:flex; justify-content:space-between;">
+                                    <span>Vandal</span><span>381 kills</span>
+                                </div>
+                                <div class="weapon-bar"><div class="weapon-bar-fill" style="width:100%"></div></div>
+                            </div>
+                        </div>
+                        <div style="display:flex; align-items:center; gap:10px;">
+                            <img src="armas/Retrowave_Bulldog.png" alt="Bulldog" class="weapon-img">
+                            <div style="flex:1;">
+                                <div style="display:flex; justify-content:space-between;">
+                                    <span>Bulldog</span><span>373 kills</span>
+                                </div>
+                                <div class="weapon-bar"><div class="weapon-bar-fill" style="width:98%"></div></div>
+                            </div>
+                        </div>
+                        <div style="display:flex; align-items:center; gap:10px;">
+                            <img src="armas/Radiant_Entertainment_System_Ghost.png" alt="Ghost" class="weapon-img">
+                            <div style="flex:1;">
+                                <div style="display:flex; justify-content:space-between;">
+                                    <span>Ghost</span><span>125 kills</span>
+                                </div>
+                                <div class="weapon-bar"><div class="weapon-bar-fill" style="width:33%"></div></div>
+                            </div>
+                        </div>
+                    </div>
+                    <button class="filter-btn" style="margin-top:15px; width:100%; justify-content:center;">View All Weapons</button>
+                </div>
+                <!-- Mapas -->
+                <div class="card">
+                    <h2 class="section-title">Top Maps</h2>
+                    <div style="display:flex; flex-direction:column; gap:12px;">
+                        <div class="map-bg" style="background-image:url('https://media.valorant-api.com/maps/2bee0dc9-4ffe-519b-1cbd-7fbe763a6047/splash.png');">
+                            <div style="display:flex; justify-content:space-between;">
+                                <span>Lotus</span><span>72.7% · 8W - 3L</span>
+                            </div>
+                            <div class="map-winbar"><div class="map-winbar-fill" style="width:72.7%"></div></div>
+                        </div>
+                        <div class="map-bg" style="background-image:url('https://media.valorant-api.com/maps/7eaecc1b-4337-bbf6-6ab9-04b8f06b3319/splash.png');">
+                            <div style="display:flex; justify-content:space-between;">
+                                <span>Ascent</span><span>57.1% · 4W - 3L</span>
+                            </div>
+                            <div class="map-winbar"><div class="map-winbar-fill" style="width:57.1%"></div></div>
+                        </div>
+                        <div class="map-bg" style="background-image:url('https://media.valorant-api.com/maps/2bee0dc9-4ffe-519b-1cbd-7fbe763a6047/splash.png');">
+                            <div style="display:flex; justify-content:space-between;">
+                                <span>Haven</span><span>55.6% · 5W - 4L</span>
+                            </div>
+                            <div class="map-winbar"><div class="map-winbar-fill" style="width:55.6%"></div></div>
+                        </div>
+                        <div class="map-bg" style="background-image:url('https://media.valorant-api.com/maps/d960549e-485c-e861-8d71-aa9d1aed12a2/splash.png');">
+                            <div style="display:flex; justify-content:space-between;">
+                                <span>Split</span><span>50.0% · 5W - 5L</span>
+                            </div>
+                            <div class="map-winbar"><div class="map-winbar-fill" style="width:50%"></div></div>
+                        </div>
+                        <div class="map-bg" style="background-image:url('https://media.valorant-api.com/maps/b529448b-4d60-346e-e89e-00a4c527a405/splash.png');">
+                            <div style="display:flex; justify-content:space-between;">
+                                <span>Sunset</span><span>37.5% · 3W - 5L</span>
+                            </div>
+                            <div class="map-winbar"><div class="map-winbar-fill" style="width:37.5%"></div></div>
+                        </div>
+                    </div>
+                    <button class="filter-btn" style="margin-top:15px; width:100%; justify-content:center;">View All Maps</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- TEAMMATES FRECUENTES -->
+        <section class="fade-in" style="margin-top:30px;">
+            <h2 class="section-title">Teammates Frecuentes</h2>
+            <div id="teammates-container" class="grid-3">
+                <div class="card" style="text-align:center; color:var(--gris);">Cargando compañeros...</div>
+            </div>
+        </section>
+
+        <!-- HISTORIAL DE PARTIDAS -->
+        <section class="fade-in" style="margin-top:30px;">
+            <h2 class="section-title">Historial de Partidas</h2>
+            <div style="display:flex; gap:10px; flex-wrap:wrap; margin-bottom:15px;">
+                <button class="filter-btn active" id="btn-all" onclick="filtrarModo('all')">Todas</button>
+                <button class="filter-btn" id="btn-Competitive" onclick="filtrarModo('Competitive')">Competitivo</button>
+                <button class="filter-btn" id="btn-Unrated" onclick="filtrarModo('Unrated')">Unrated</button>
+                <button class="filter-btn" id="btn-Swiftplay" onclick="filtrarModo('Swiftplay')">Swiftplay</button>
+                <button class="filter-btn" id="btn-Deathmatch" onclick="filtrarModo('Deathmatch')">Deathmatch</button>
+            </div>
+            <div id="match-history-container" style="display:flex; flex-direction:column; gap:10px;">
+                <div class="card" style="text-align:center; color:var(--gris);">Cargando partidas...</div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        © 2025 Neri Aiko 💜 Todos los derechos reservados.
+    </footer>
+
+    <script defer>
+        // Cursor y partículas
+        const cursorSkull = document.getElementById('cursor-skull');
+        document.addEventListener('mousemove', (e) => {
+            cursorSkull.style.left = e.clientX + 'px';
+            cursorSkull.style.top = e.clientY + 'px';
+        });
+        document.addEventListener('mousedown', () => cursorSkull.classList.add('click-effect'));
+        document.addEventListener('mouseup', () => cursorSkull.classList.remove('click-effect'));
+
+        let lastParticleTime = 0;
+        document.addEventListener('mousemove', (e) => {
+            const now = Date.now();
+            if (now - lastParticleTime < 50) return;
+            lastParticleTime = now;
+            const particle = document.createElement('div');
+            particle.className = 'particle';
+            particle.style.left = (e.clientX - 2) + 'px';
+            particle.style.top = (e.clientY - 2) + 'px';
+            document.body.appendChild(particle);
+            setTimeout(() => particle.remove(), 600);
+            const particles = document.querySelectorAll('.particle');
+            if (particles.length > 30) particles[0].remove();
+        });
+
+        // Menú móvil
+        const menuToggle = document.getElementById('menuToggle');
+        const mobileMenu = document.getElementById('mobileMenu');
+        menuToggle.addEventListener('click', () => mobileMenu.classList.toggle('show'));
+
+        // Animación de aparición
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) entry.target.classList.add('visible');
+            });
+        }, { threshold: 0.1 });
+        document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+
+        // Datos de Valorant
+        const PUUID = "54abee7a-c3a2-5091-b94c-8f7b4f7e7ae1";
+        const WORKER_URL = "https://rapid-pond-d4d7.togivt.workers.dev";
+        let cachePartidas = [];
+
+        async function cargarDatosValorant() {
+            const statusEl = document.getElementById('api-status');
+            if (statusEl) statusEl.textContent = "Conectando...";
+
+            try {
+                const resRango = await fetch(`${WORKER_URL}/valorant/v2/by-puuid/mmr/na/${PUUID}`);
+                if (resRango.ok) {
+                    const rangoData = await resRango.json();
+                    if (rangoData?.data?.current_data) {
+                        const cur = rangoData.data.current_data;
+                        document.getElementById('val-rank').textContent = cur.currenttierpatched || "Sin rango";
+                        document.getElementById('val-rr').textContent = `${cur.ranking_in_tier ?? 0} RR`;
+                    }
+                }
+            } catch (err) {
+                console.error("Error al obtener MMR:", err);
+            }
+
+            try {
+                const resMatches = await fetch(`${WORKER_URL}/valorant/v3/by-puuid/matches/na/${PUUID}?size=10`);
+                if (resMatches.ok) {
+                    const matchesData = await resMatches.json();
+                    if (matchesData?.status === 200 && Array.isArray(matchesData.data)) {
+                        cachePartidas = matchesData.data;
+                        mostrarPartidas(cachePartidas);
+                        procesarTeammates(cachePartidas);
+                        if (statusEl) statusEl.textContent = "Conectado";
+                    } else {
+                        throw new Error("Formato no válido");
+                    }
+                } else {
+                    throw new Error("Error HTTP");
+                }
+            } catch (err) {
+                console.error("Error al cargar historial:", err);
+                if (statusEl) statusEl.textContent = "Error de API";
+                document.getElementById('match-history-container').innerHTML = `
+                    <div class="card" style="text-align:center; color:#ff9999;">No se pudo conectar con el servidor de Valorant.</div>`;
+            }
+        }
+
+        function procesarTeammates(partidas) {
+            const map = {};
+            partidas.forEach(match => {
+                if (match.metadata?.mode === "Deathmatch") return;
+                const myPlayer = match.players?.all_players?.find(p => p.puuid === PUUID);
+                if (!myPlayer) return;
+                const myTeam = myPlayer.team;
+                match.players.all_players.forEach(p => {
+                    if (p.puuid === PUUID || p.team !== myTeam) return;
+                    const key = `${p.name}#${p.tag}`;
+                    if (!map[key]) map[key] = { name: p.name, tag: p.tag, matches: 0, kills: 0, deaths: 0, wins: 0, agents: {} };
+                    map[key].matches++;
+                    map[key].kills += p.stats?.kills || 0;
+                    map[key].deaths += p.stats?.deaths || 1;
+                    map[key].agents[p.character || "Agente"] = (map[key].agents[p.character || "Agente"] || 0) + 1;
+                    const teamKey = Object.keys(match.teams || {}).find(k => k.toLowerCase() === p.team.toLowerCase());
+                    if (teamKey && match.teams[teamKey].won) map[key].wins++;
+                });
+            });
+            const sorted = Object.values(map).sort((a,b) => b.matches - a.matches).slice(0,6);
+            const container = document.getElementById('teammates-container');
+            container.innerHTML = '';
+            if (!sorted.length) {
+                container.innerHTML = '<div class="card" style="text-align:center; color:var(--gris);">No se encontraron compañeros recientes.</div>';
+                return;
+            }
+            sorted.forEach(mate => {
+                const kd = (mate.kills / mate.deaths).toFixed(2);
+                const winrate = ((mate.wins / mate.matches) * 100).toFixed(1);
+                let main = "Agente";
+                let max = -1;
+                for (const [agent, count] of Object.entries(mate.agents)) {
+                    if (count > max) { max = count; main = agent; }
+                }
+                container.innerHTML += `
+                    <div class="card" style="padding:15px;">
+                        <strong>${mate.name}#${mate.tag}</strong>
+                        <div style="font-size:0.8rem; color:var(--gris);">Main: ${main} · ${mate.matches} partidas</div>
+                        <div style="font-size:0.8rem; color:var(--fucsia);">K/D: ${kd} · Winrate: ${winrate}%</div>
+                    </div>`;
+            });
+        }
+
+        function mostrarPartidas(partidas) {
+            const container = document.getElementById('match-history-container');
+            container.innerHTML = '';
+            if (!partidas.length) {
+                container.innerHTML = '<div class="card" style="text-align:center; color:var(--gris);">No hay partidas en este modo.</div>';
+                return;
+            }
+            partidas.slice(0, 10).forEach(match => {
+                const playerStats = match.players?.all_players?.find(p => p.puuid === PUUID);
+                if (!playerStats) return;
+                const kills = playerStats.stats?.kills || 0;
+                const deaths = playerStats.stats?.deaths || 0;
+                const assists = playerStats.stats?.assists || 0;
+                const agent = playerStats.character || "Agente";
+                const map = match.metadata?.map || "Mapa";
+                const mode = match.metadata?.mode || "Modo";
+                let won = false;
+                let position = null;
+
+                if (mode === 'Deathmatch') {
+                    const ranking = [...match.players.all_players].sort((a,b) => (b.stats?.kills || 0) - (a.stats?.kills || 0));
+                    position = ranking.findIndex(p => p.puuid === PUUID) + 1;
+                } else {
+                    if (match.teams && playerStats.team) {
+                        const myTeamLower = playerStats.team.toLowerCase();
+                        const teamKeys = Object.keys(match.teams);
+                        const teamKey = teamKeys.find(k => k.toLowerCase() === myTeamLower);
+                        if (teamKey) {
+                            const teamData = match.teams[teamKey];
+                            won = Boolean(teamData.won);
+                            if (!won && teamData.rounds_won !== undefined) {
+                                const enemyKey = teamKeys.find(k => k.toLowerCase() !== myTeamLower);
+                                if (enemyKey && match.teams[enemyKey]?.rounds_won !== undefined) {
+                                    won = teamData.rounds_won > match.teams[enemyKey].rounds_won;
+                                }
+                            }
+                        }
+                    }
+                }
+
+                let badgeHTML = '';
+                if (mode === 'Deathmatch') {
+                    badgeHTML = `<span class="badge badge-win">${position}º Lugar</span>`;
+                } else {
+                    badgeHTML = `<span class="badge ${won ? 'badge-win' : 'badge-loss'}">${won ? 'VICTORIA' : 'DERROTA'}</span>`;
+                }
+
+                container.innerHTML += `
+                    <div class="match-card">
+                        <div>
+                            <strong>${agent}</strong> · ${map}
+                            <div style="font-size:0.8rem; color:var(--gris);">${mode}</div>
+                        </div>
+                        <div>K/D/A: <strong>${kills}/${deaths}/${assists}</strong></div>
+                        ${badgeHTML}
+                    </div>`;
+            });
+        }
+
+        function filtrarModo(modo) {
+            document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
+            const btn = document.getElementById(`btn-${modo}`);
+            if (btn) btn.classList.add('active');
+            if (modo === 'all') mostrarPartidas(cachePartidas);
+            else mostrarPartidas(cachePartidas.filter(m => m.metadata?.mode === modo || (modo === 'Deathmatch' && m.metadata?.mode?.includes('Deathmatch'))));
+        }
+
+        cargarDatosValorant();
+    </script>
+</body>
+</html>

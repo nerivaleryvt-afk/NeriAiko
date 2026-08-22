@@ -208,12 +208,8 @@
         }
 
         @media (max-width: 768px) {
-            .nav-desktop {
-                display: none;
-            }
-            .menu-toggle {
-                display: block;
-            }
+            .nav-desktop { display: none; }
+            .menu-toggle { display: block; }
         }
 
         .hero {
@@ -387,9 +383,7 @@
             transition: opacity 0.3s;
             pointer-events: none;
         }
-        .card:hover::before {
-            opacity: 1;
-        }
+        .card:hover::before { opacity: 1; }
         .card:hover {
             border-color: var(--fucsia);
             box-shadow: 0 0 20px rgba(255,68,204,0.3);
@@ -418,13 +412,8 @@
             align-items: center;
             font-size: 1rem;
         }
-        .local-time {
-            color: var(--fucsia);
-            font-weight: 700;
-        }
-        .user-time {
-            color: var(--gris);
-        }
+        .local-time { color: var(--fucsia); font-weight: 700; }
+        .user-time { color: var(--gris); }
 
         .next-stream-card {
             margin-top: 30px;
@@ -461,8 +450,7 @@
             gap: 10px;
         }
 
-        .skull-left,
-        .skull-right {
+        .skull-left, .skull-right {
             font-size: 3rem;
             opacity: 0.3;
             transform: rotate(15deg);
@@ -470,9 +458,7 @@
             filter: drop-shadow(0 0 8px var(--fucsia));
         }
 
-        .skull-right {
-            transform: rotate(-15deg);
-        }
+        .skull-right { transform: rotate(-15deg); }
 
         #next-stream-countdown {
             font-size: 2rem;
@@ -508,6 +494,7 @@
             <a href="#inicio">Inicio</a>
             <a href="sobre.mi.html">Sobre Mí</a>
             <a href="valorant.html">Valorant</a>
+            <a href="#extension">Extensión</a>
             <a href="#contacto">Contacto</a>
         </nav>
         <div class="live-indicator" id="liveIndicator">
@@ -521,6 +508,7 @@
         <a href="#inicio">Inicio</a>
         <a href="sobre.mi.html">Sobre Mí</a>
         <a href="valorant.html">Valorant</a>
+        <a href="#extension">Extensión</a>
         <a href="#contacto">Contacto</a>
     </div>
 
@@ -556,6 +544,31 @@
                 <div id="next-stream-countdown">Calculando...</div>
                 <span class="skull-right">💀</span>
             </div>
+        </div>
+    </section>
+
+    <!-- SECCIÓN EXTENSIÓN -->
+    <section class="section" id="extension">
+        <h2 class="section-title">Extensión Live Alert</h2>
+        <div class="card" style="text-align:center;">
+            <img src="me/Extension.png" alt="Extensión de Neri Aiko" style="max-width:250px; margin:0 auto 20px; display:block; border-radius:15px; border:2px solid var(--burdeos); box-shadow:0 0 20px rgba(255,68,204,0.3);">
+            <p style="font-size:1.1rem; margin-bottom:20px;">Recibe una notificación cuando Neri Aiko esté en vivo.</p>
+            <a href="https://github.com/nerivaleryvt-afk/NeriAiko/raw/main/NeriAlert.rar" target="_blank" class="hero-btn">DESCARGAR EXTENSIÓN</a>
+            <p style="margin-top:15px; font-size:0.9rem; color:var(--gris);">Descarga el archivo .rar, descomprímelo y sigue el tutorial.</p>
+        </div>
+
+        <div class="card" style="margin-top:20px;">
+            <h3 style="color:var(--fucsia); margin-bottom:15px;">Tutorial de instalación</h3>
+            <ol style="line-height:1.8;">
+                <li>Descarga y descomprime el archivo <strong>NeriAlert.rar</strong>.</li>
+                <li>Abre Chrome y ve a <strong>chrome://extensions/</strong></li>
+                <li>Activa el <strong>Modo de desarrollador</strong> (esquina superior derecha).</li>
+                <li>Haz clic en <strong>"Cargar extensión sin empaquetar"</strong>.</li>
+                <li>Selecciona la carpeta <strong>NeriAlert</strong>.</li>
+                <li>¡Listo! Recibirás una alerta cuando Neri esté en vivo.</li>
+            </ol>
+            <button id="btn-abrir-extensiones" class="hero-btn" style="margin-top:20px; width:100%;">ABRIR EXTENSIONES</button>
+            <p id="mensaje-copiado" style="margin-top:10px; font-size:0.8rem; color:var(--fucsia); display:none;"></p>
         </div>
     </section>
 
@@ -620,6 +633,25 @@
                 const target = document.querySelector(this.getAttribute('href'));
                 if (target) target.scrollIntoView({ behavior: 'smooth' });
             });
+        });
+
+        // ===== BOTÓN ABRIR EXTENSIONES =====
+        document.getElementById('btn-abrir-extensiones').addEventListener('click', () => {
+            const url = 'chrome://extensions/';
+            const win = window.open(url, '_blank');
+            if (!win) {
+                navigator.clipboard.writeText(url).then(() => {
+                    const mensaje = document.getElementById('mensaje-copiado');
+                    mensaje.textContent = 'No se pudo abrir automáticamente. URL copiada: ' + url;
+                    mensaje.style.display = 'block';
+                    setTimeout(() => { mensaje.style.display = 'none'; }, 5000);
+                });
+            } else {
+                const mensaje = document.getElementById('mensaje-copiado');
+                mensaje.textContent = 'Abriendo extensiones...';
+                mensaje.style.display = 'block';
+                setTimeout(() => { mensaje.style.display = 'none'; }, 2000);
+            }
         });
 
         // ===== INDICADOR EN VIVO =====
