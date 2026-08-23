@@ -456,7 +456,7 @@
                 <div class="card">
                     <div class="stat-box">
                         <div class="label">Rango Actual</div>
-                        <img src="valorant/Der_Rang_„Silber_II“.webp" alt="Silver 2" style="width:60px;height:60px;object-fit:contain;margin:10px auto;">
+                        <img src="valorant/3293-valorant-silver-3.png" alt="Silver 3" style="width:60px;height:60px;object-fit:contain;margin:10px auto;" onerror="this.src='valorant/Der_Rang_„Silber_II“.webp'">
                         <div class="value" id="val-rank">Cargando...</div>
                         <div id="val-rr" style="color:var(--gris);">-- RR</div>
                     </div>
@@ -733,10 +733,36 @@
                 const map = match.metadata?.map || "Mapa";
                 const mode = match.metadata?.mode || "Modo";
                 let won = false;
-                if (match.teams && playerStats.team) {
-                    const teamKey = Object.keys(match.teams).find(k => k.toLowerCase() === playerStats.team.toLowerCase());
-                    if (teamKey) won = Boolean(match.teams[teamKey].won);
+                let position = null;
+
+                if (mode === 'Deathmatch') {
+                    const ranking = [...match.players.all_players].sort((a,b) => (b.stats?.kills || 0) - (a.stats?.kills || 0));
+                    position = ranking.findIndex(p => p.puuid === PUUID) + 1;
+                } else {
+                    if (match.teams && playerStats.team) {
+                        const myTeamLower = playerStats.team.toLowerCase();
+                        const teamKeys = Object.keys(match.teams);
+                        const teamKey = teamKeys.find(k => k.toLowerCase() === myTeamLower);
+                        if (teamKey) {
+                            const teamData = match.teams[teamKey];
+                            won = Boolean(teamData.won);
+                            if (!won && teamData.rounds_won !== undefined) {
+                                const enemyKey = teamKeys.find(k => k.toLowerCase() !== myTeamLower);
+                                if (enemyKey && match.teams[enemyKey]?.rounds_won !== undefined) {
+                                    won = teamData.rounds_won > match.teams[enemyKey].rounds_won;
+                                }
+                            }
+                        }
+                    }
                 }
+
+                let badgeHTML = '';
+                if (mode === 'Deathmatch') {
+                    badgeHTML = `<span class="badge badge-win">${position}º Lugar</span>`;
+                } else {
+                    badgeHTML = `<span class="badge ${won ? 'badge-win' : 'badge-loss'}">${won ? 'VICTORIA' : 'DERROTA'}</span>`;
+                }
+
                 container.innerHTML += `
                     <div class="match-card">
                         <div>
@@ -744,7 +770,7 @@
                             <div style="font-size:0.8rem; color:var(--gris);">${mode}</div>
                         </div>
                         <div>K/D/A: <strong>${kills}/${deaths}/${assists}</strong></div>
-                        <span class="badge ${won ? 'badge-win' : 'badge-loss'}">${won ? 'VICTORIA' : 'DERROTA'}</span>
+                        ${badgeHTML}
                     </div>`;
             });
         }
@@ -759,5 +785,4 @@
 
         cargarDatosValorant();
     </script>
-</body>
-</html>
+</
