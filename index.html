@@ -9,7 +9,7 @@
     <meta name="description" content="Neri Aiko, VTuber roedora urbana. Directos en Twitch, arte callejero y mucho queso. ¡Únete a la madriguera!">
     <meta property="og:title" content="Neri Aiko ★ VTuber & Streamer">
     <meta property="og:description" content="Neri Aiko, VTuber roedora urbana. Directos en Twitch, arte callejero y mucho queso.">
-    <meta property="og:image" content="https://nerivaleryvt-afk.github.io/NeriAiko/img/Neri.png">
+    <meta property="og:image" content="img/Neri.png">
     <meta property="og:url" content="https://nerivaleryvt-afk.github.io/NeriAiko/">
     <meta name="twitter:card" content="summary_large_image">
 
@@ -547,7 +547,6 @@
         </div>
     </section>
 
-    <!-- SECCIÓN EXTENSIÓN -->
     <section class="section" id="extension">
         <h2 class="section-title">Extensión Live Alert</h2>
         <div class="card" style="text-align:center;">
@@ -567,7 +566,7 @@
                 <li>Selecciona la carpeta <strong>NeriAlert</strong>.</li>
                 <li>¡Listo! Recibirás una alerta cuando Neri esté en vivo.</li>
             </ol>
-            <button id="btn-copiar-extensiones" class="hero-btn" style="margin-top:20px; width:100%;">COPIAR URL DE EXTENSIONES</button>
+            <button id="btn-abrir-extensiones" class="hero-btn" style="margin-top:20px; width:100%;">ABRIR EXTENSIONES</button>
             <p id="mensaje-copiado" style="margin-top:10px; font-size:0.8rem; color:var(--fucsia); display:none;"></p>
         </div>
     </section>
@@ -635,30 +634,23 @@
             });
         });
 
-        // ===== BOTÓN COPIAR URL DE EXTENSIONES =====
-        document.getElementById('btn-copiar-extensiones').addEventListener('click', () => {
+        // ===== BOTÓN ABRIR EXTENSIONES =====
+        document.getElementById('btn-abrir-extensiones').addEventListener('click', () => {
             const url = 'chrome://extensions/';
-            const textArea = document.createElement('textarea');
-            textArea.value = url;
-            textArea.style.position = 'fixed';
-            textArea.style.left = '-9999px';
-            document.body.appendChild(textArea);
-            textArea.select();
-            textArea.setSelectionRange(0, 99999);
-            try {
-                const success = document.execCommand('copy');
+            const win = window.open(url, '_blank');
+            if (!win) {
+                navigator.clipboard.writeText(url).then(() => {
+                    const mensaje = document.getElementById('mensaje-copiado');
+                    mensaje.textContent = 'No se pudo abrir automáticamente. URL copiada: ' + url;
+                    mensaje.style.display = 'block';
+                    setTimeout(() => { mensaje.style.display = 'none'; }, 5000);
+                });
+            } else {
                 const mensaje = document.getElementById('mensaje-copiado');
-                if (success) {
-                    mensaje.textContent = '✅ URL copiada: ' + url;
-                } else {
-                    mensaje.textContent = 'No se pudo copiar automáticamente. Copia manualmente: ' + url;
-                }
+                mensaje.textContent = 'Abriendo extensiones...';
                 mensaje.style.display = 'block';
-                setTimeout(() => { mensaje.style.display = 'none'; }, 5000);
-            } catch (err) {
-                console.error('Error al copiar:', err);
+                setTimeout(() => { mensaje.style.display = 'none'; }, 2000);
             }
-            document.body.removeChild(textArea);
         });
 
         // ===== INDICADOR EN VIVO =====
@@ -672,10 +664,14 @@
                 const liveText = document.getElementById('liveText');
                 if (isLive) {
                     liveDot.classList.add('active');
-                    liveText.textContent = '🔴 EN DIRECTO AHORA';
+                    liveText.textContent = '🔴 ¡NERI AIKO ESTÁ EN VIVO!';
+                    liveText.style.color = 'var(--fucsia)';
+                    liveText.style.fontWeight = '900';
                 } else {
                     liveDot.classList.remove('active');
                     liveText.textContent = '⚫ No está en directo';
+                    liveText.style.color = 'var(--blanco)';
+                    liveText.style.fontWeight = 'bold';
                 }
             } catch (error) {
                 document.getElementById('liveText').textContent = 'Estado desconocido';
