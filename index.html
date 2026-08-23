@@ -566,8 +566,8 @@
                 <li>Selecciona la carpeta <strong>NeriAlert</strong>.</li>
                 <li>¡Listo! Recibirás una alerta cuando Neri esté en vivo.</li>
             </ol>
-            <button id="btn-abrir-extensiones" class="hero-btn" style="margin-top:20px; width:100%;">ABRIR EXTENSIONES</button>
-            <p id="mensaje-copiado" style="margin-top:10px; font-size:0.8rem; color:var(--fucsia); display:none;"></p>
+            <button id="btn-copiar-url" class="hero-btn" style="margin-top:20px; width:100%;">COPIAR URL DE EXTENSIONES</button>
+            <p id="mensaje-copiado" style="margin-top:10px; font-size:0.8rem; color:var(--fucsia); display:none;">✅ URL copiada</p>
         </div>
     </section>
 
@@ -581,6 +581,11 @@
     <footer>
         © 2025 Neri Aiko 💜 Todos los derechos reservados.
     </footer>
+
+    <!-- Firebase App (compat) -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <!-- Firestore -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
 
     <script defer>
         // ===== CURSOR PERSONALIZADO =====
@@ -629,23 +634,30 @@
             });
         });
 
-        // ===== BOTÓN ABRIR EXTENSIONES =====
-        document.getElementById('btn-abrir-extensiones').addEventListener('click', () => {
+        // ===== COPIAR URL DE EXTENSIONES =====
+        document.getElementById('btn-copiar-url').addEventListener('click', () => {
             const url = 'chrome://extensions/';
-            const win = window.open(url, '_blank');
-            if (!win) {
-                navigator.clipboard.writeText(url).then(() => {
-                    const mensaje = document.getElementById('mensaje-copiado');
-                    mensaje.textContent = 'No se pudo abrir automáticamente. URL copiada: ' + url;
-                    mensaje.style.display = 'block';
-                    setTimeout(() => { mensaje.style.display = 'none'; }, 5000);
-                });
-            } else {
+            const textArea = document.createElement('textarea');
+            textArea.value = url;
+            textArea.style.position = 'fixed';
+            textArea.style.left = '-9999px';
+            document.body.appendChild(textArea);
+            textArea.select();
+            textArea.setSelectionRange(0, 99999);
+            try {
+                const success = document.execCommand('copy');
                 const mensaje = document.getElementById('mensaje-copiado');
-                mensaje.textContent = 'Abriendo extensiones...';
+                if (success) {
+                    mensaje.textContent = '✅ URL copiada: ' + url;
+                } else {
+                    mensaje.textContent = 'No se pudo copiar. Usa: ' + url;
+                }
                 mensaje.style.display = 'block';
-                setTimeout(() => { mensaje.style.display = 'none'; }, 2000);
+                setTimeout(() => { mensaje.style.display = 'none'; }, 5000);
+            } catch (err) {
+                console.error('Error al copiar:', err);
             }
+            document.body.removeChild(textArea);
         });
 
         // ===== INDICADOR EN VIVO (decapi.me) =====
@@ -679,6 +691,164 @@
         }
         checkLive();
         setInterval(checkLive, 60000);
+
+        // ===== HORARIO DINÁMICO CON FIREBASE =====
+        let visitorCountry = null;
+        let visitorCountryCode = null;
+
+        function getFlagEmoji(countryCode) {
+            const codePoints = countryCode.toUpperCase().split('').map(char => 127397 + char.charCodeAt());
+            return String.fromCodePoint(...codePoints);
+        }
+
+        async function fetchVisitorCountry() {
+            try {
+                const response = await fetch('https://ipapi.co/json/');
+                const data = await response.json();
+                visitorCountry = data.country_name || null;
+                visitorCountryCode = data.country_code || null;
+            } catch (error) {
+                console.error('No se pudo obtener el país:', error);
+            }
+            renderSchedule();
+        }
+
+        function getNextOccurrence(stream) {
+            const now = new Date();
+            for (let i = 0; i < 8; i++) {
+                let candidate = new Date(now);
+                candidate.setDate(now.getDate() + i);
+                candidate.setUTCHours(stream.hour, stream.minute, 0, 0);
+                if (candidate.getUTCDay() === stream.day && candidate > now) {
+                    return candidate;
+                }
+            }
+            return null;
+        }
+
+        function getNextStream() {
+            let closest = null;
+            let closestTime = null;
+            streams.forEach(stream => {
+                const next = getNextOccurrence(stream);
+                if (next && (!closestTime || next < closestTime)) {
+                    closestTime = next;
+                    closest = stream;
+                }
+            });
+            return { stream: closest, date: closestTime };
+        }
+
+        function renderSchedule() {
+            const scheduleList = document.getElementById('schedule-list');
+            const daysShort = ['DOM', 'LUN', 'MAR', 'MIÉ', 'JUE', 'VIE', 'SÁB'];
+            scheduleList.innerHTML = '';
+
+            streams.sort((a, b) => {
+                const dayA = (a.day + 6) % 7;
+                const dayB = (b.day + 6) % 7;
+                return dayA - dayB;
+            });
+
+            streams.forEach(stream => {
+                const now = new Date();
+                let targetDate = new Date(now);
+                targetDate.setUTCDate(now.getUTCDate() + ((stream.day - now.getUTCDay() + 7) % 7));
+                targetDate.setUTCHours(stream.hour, stream.minute, 0, 0);
+
+                const elSalvadorTime = targetDate.toLocaleTimeString('es-SV', {
+                    hour: '2-digit',
+                    minute: '2-digit',
+                    timeZone: 'America/El_Salvador'
+                });
+
+                const visitorTime = targetDate.toLocaleTimeString([], {
+                    hour: '2-digit',
+                    minute: '2-digit'
+                });
+
+                const localDay = (stream.day + 6) % 7;
+                const dayName = daysShort[localDay];
+
+                const flag = visitorCountryCode ? getFlagEmoji(visitorCountryCode) : '🌐';
+                const countryDisplay = visitorCountry || 'tu hora';
+
+                const card = document.createElement('div');
+                card.className = 'card schedule-card';
+                card.innerHTML = `
+                    <div class="day">${dayName}</div>
+                    <div class="stream-title">${stream.title || ''}</div>
+                    <div class="time-info">
+                        <span class="local-time">🇸🇻 ${elSalvadorTime}</span>
+                        <span class="user-time">${flag} ${visitorTime} (${countryDisplay})</span>
+                    </div>
+                `;
+                scheduleList.appendChild(card);
+            });
+        }
+
+        function updateCountdown() {
+            const { stream, date } = getNextStream();
+            const countdownEl = document.getElementById('next-stream-countdown');
+            const infoEl = document.getElementById('next-stream-info');
+            if (!date) {
+                countdownEl.textContent = 'Sin directos programados';
+                if (infoEl) infoEl.textContent = '';
+                return;
+            }
+            const diff = date.getTime() - Date.now();
+            if (diff <= 0) {
+                countdownEl.textContent = '¡En vivo ahora!';
+                if (infoEl) infoEl.textContent = `${stream.title || 'Directo'} en curso`;
+                return;
+            }
+            const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+            countdownEl.textContent = `${days}d ${hours}h ${minutes}m ${seconds}s`;
+
+            const daysShort = ['DOM', 'LUN', 'MAR', 'MIÉ', 'JUE', 'VIE', 'SÁB'];
+            const localDay = (stream.day + 6) % 7;
+            if (infoEl) {
+                infoEl.textContent = `${daysShort[localDay]} · ${stream.title || 'Directo'}`;
+            }
+        }
+
+        // ===== FIREBASE =====
+        const firebaseConfig = {
+            apiKey: "AIzaSyB_lzGjYnFFkPuuzJ-uYKKcnFzBMKQTUyA",
+            authDomain: "neri-aiko-web.firebaseapp.com",
+            projectId: "neri-aiko-web",
+            storageBucket: "neri-aiko-web.firebasestorage.app",
+            messagingSenderId: "348092738723",
+            appId: "1:348092738723:web:6346ebf79d7beaddd2e316",
+            measurementId: "G-0QD3GETDGR"
+        };
+
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
+
+        let streams = [];
+
+        async function loadStreamsFromFirestore() {
+            try {
+                const snapshot = await db.collection('streams').get();
+                streams = [];
+                snapshot.forEach(doc => {
+                    streams.push(doc.data());
+                });
+                renderSchedule();
+                updateCountdown();
+                setInterval(updateCountdown, 1000);
+                fetchVisitorCountry();
+            } catch (error) {
+                console.error('Error cargando horarios:', error);
+                document.getElementById('next-stream-countdown').textContent = 'Error al cargar horarios';
+            }
+        }
+
+        loadStreamsFromFirestore();
     </script>
 </body>
 </html>
