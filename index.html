@@ -492,6 +492,7 @@
         <a href="#inicio" class="logo">Neri Aiko</a>
         <nav class="nav-desktop">
             <a href="#inicio">Inicio</a>
+            <a href="lector.html">📚 Biblioteca</a>
             <a href="sobre.mi.html">Sobre Mí</a>
             <a href="valorant.html">Valorant</a>
             <a href="#extension">Extensión</a>
@@ -506,6 +507,7 @@
 
     <div class="mobile-menu" id="mobileMenu">
         <a href="#inicio">Inicio</a>
+        <a href="lector.html">📚 Biblioteca</a>
         <a href="sobre.mi.html">Sobre Mí</a>
         <a href="valorant.html">Valorant</a>
         <a href="#extension">Extensión</a>
@@ -566,8 +568,8 @@
                 <li>Selecciona la carpeta <strong>NeriAlert</strong>.</li>
                 <li>¡Listo! Recibirás una alerta cuando Neri esté en vivo.</li>
             </ol>
-            <button id="btn-copiar-url" class="hero-btn" style="margin-top:20px; width:100%;">COPIAR URL DE EXTENSIONES</button>
-            <p id="mensaje-copiado" style="margin-top:10px; font-size:0.8rem; color:var(--fucsia); display:none;">✅ URL copiada</p>
+            <button id="btn-abrir-extensiones" class="hero-btn" style="margin-top:20px; width:100%;">ABRIR EXTENSIONES</button>
+            <p id="mensaje-copiado" style="margin-top:10px; font-size:0.8rem; color:var(--fucsia); display:none;"></p>
         </div>
     </section>
 
@@ -634,46 +636,34 @@
             });
         });
 
-        // ===== COPIAR URL DE EXTENSIONES =====
-        document.getElementById('btn-copiar-url').addEventListener('click', () => {
+        // ===== BOTÓN ABRIR EXTENSIONES =====
+        document.getElementById('btn-abrir-extensiones').addEventListener('click', () => {
             const url = 'chrome://extensions/';
-            const textArea = document.createElement('textarea');
-            textArea.value = url;
-            textArea.style.position = 'fixed';
-            textArea.style.left = '-9999px';
-            document.body.appendChild(textArea);
-            textArea.select();
-            textArea.setSelectionRange(0, 99999);
-            try {
-                const success = document.execCommand('copy');
+            const win = window.open(url, '_blank');
+            if (!win) {
+                navigator.clipboard.writeText(url).then(() => {
+                    const mensaje = document.getElementById('mensaje-copiado');
+                    mensaje.textContent = 'No se pudo abrir automáticamente. URL copiada: ' + url;
+                    mensaje.style.display = 'block';
+                    setTimeout(() => { mensaje.style.display = 'none'; }, 5000);
+                });
+            } else {
                 const mensaje = document.getElementById('mensaje-copiado');
-                if (success) {
-                    mensaje.textContent = '✅ URL copiada: ' + url;
-                } else {
-                    mensaje.textContent = 'No se pudo copiar. Usa: ' + url;
-                }
+                mensaje.textContent = 'Abriendo extensiones...';
                 mensaje.style.display = 'block';
-                setTimeout(() => { mensaje.style.display = 'none'; }, 5000);
-            } catch (err) {
-                console.error('Error al copiar:', err);
+                setTimeout(() => { mensaje.style.display = 'none'; }, 2000);
             }
-            document.body.removeChild(textArea);
         });
 
-        // ===== INDICADOR EN VIVO (decapi.me) =====
-        const WORKER_URL = 'https://decapi.me/twitch/uptime/neriaiko';
+        // ===== INDICADOR EN VIVO =====
+        const WORKER_URL = 'https://nameless-resonance-e957togi-kirei-stats.togivt.workers.dev/api/stats';
         async function checkLive() {
             try {
-                const response = await fetch(WORKER_URL, { cache: 'no-cache' });
-                const texto = await response.text();
-                const isLive = texto.trim().length > 0 && 
-                               !texto.includes("offline") && 
-                               !texto.includes("not found") && 
-                               !texto.includes("error");
-
+                const response = await fetch(WORKER_URL);
+                const data = await response.json();
+                const isLive = data.isLive || false;
                 const liveDot = document.getElementById('liveDot');
                 const liveText = document.getElementById('liveText');
-
                 if (isLive) {
                     liveDot.classList.add('active');
                     liveText.textContent = '🔴 ¡NERI AIKO ESTÁ EN VIVO!';
