@@ -1,0 +1,1159 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Neri Aiko ★ Lector de Cómics</title>
+
+    <!-- SEO -->
+    <meta name="description" content="Lector de cómics CBR/CBZ con estilo Neri Aiko. Lee tus mangas y cómics favoritos.">
+    <meta property="og:title" content="Neri Aiko ★ Lector de Cómics">
+    <meta property="og:description" content="Lector de cómics CBR/CBZ con estilo Neri Aiko.">
+    <meta property="og:image" content="img/Neri.png">
+    <meta name="twitter:card" content="summary_large_image">
+
+    <!-- Icono -->
+    <link rel="icon" href="img/Neri.png">
+
+    <!-- Fuentes -->
+    <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;700;900&family=Grape+Nuts&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <!-- libarchive.js para leer RAR/CBR -->
+    <script src="https://cdn.jsdelivr.net/npm/libarchive.js@2.0.2/dist/libarchive.js"></script>
+
+    <style>
+        :root {
+            --asfalto: #1a1a1a;
+            --carbon: #0f0f0f;
+            --burdeos: #8b2e2e;
+            --burdeos-oscuro: #5e1f1f;
+            --fucsia: #ff44cc;
+            --fucsia-suave: rgba(255, 68, 204, 0.6);
+            --blanco: #f5f0eb;
+            --gris: #aaa;
+            --verde: #4CAF50;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: var(--asfalto);
+            color: var(--blanco);
+            font-family: 'Rubik', sans-serif;
+            overflow: hidden;
+            cursor: none;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            background:
+                radial-gradient(circle at 20% 20%, rgba(139,46,46,0.15), transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(255,68,204,0.08), transparent 50%),
+                var(--asfalto);
+        }
+
+        body::before {
+            content: "";
+            position: fixed;
+            inset: 0;
+            background-image: 
+                repeating-linear-gradient(45deg, 
+                    rgba(139,46,46,0.05) 0px, 
+                    rgba(139,46,46,0.05) 2px, 
+                    transparent 2px, 
+                    transparent 8px);
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        /* ===== CURSOR PERSONALIZADO ===== */
+        #cursor-skull {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 40px;
+            height: 40px;
+            pointer-events: none;
+            z-index: 10000;
+            font-size: 30px;
+            line-height: 1;
+            transform: translate(-50%, -50%);
+            transition: transform 0.1s ease;
+            filter: drop-shadow(0 0 6px var(--fucsia));
+        }
+        #cursor-skull.click-effect {
+            transform: translate(-50%, -50%) scale(0.8);
+        }
+
+        .particle {
+            position: fixed;
+            width: 5px;
+            height: 5px;
+            background: var(--fucsia);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 9999;
+            animation: fadeOut 0.6s linear forwards;
+        }
+        @keyframes fadeOut {
+            to {
+                opacity: 0;
+                transform: translateY(10px) scale(0.2);
+            }
+        }
+
+        /* ===== HEADER ===== */
+        .header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 15px 30px;
+            background: rgba(15,15,15,0.85);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--burdeos);
+            z-index: 1000;
+        }
+
+        .logo {
+            font-family: 'Grape Nuts', cursive;
+            font-size: 1.8rem;
+            color: var(--fucsia);
+            text-decoration: none;
+        }
+
+        .nav-desktop {
+            display: flex;
+            gap: 25px;
+        }
+
+        .nav-desktop a {
+            color: var(--blanco);
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 0.95rem;
+            letter-spacing: 1px;
+            transition: color 0.3s;
+        }
+
+        .nav-desktop a:hover {
+            color: var(--fucsia);
+        }
+
+        .live-indicator {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: var(--carbon);
+            padding: 6px 14px;
+            border-radius: 20px;
+            border: 1px solid var(--burdeos);
+            font-size: 0.85rem;
+            font-weight: bold;
+        }
+
+        .live-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: #555;
+        }
+        .live-dot.active {
+            background: #ff2a2a;
+            box-shadow: 0 0 8px #ff2a2a;
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.3); }
+            100% { transform: scale(1); }
+        }
+
+        .menu-toggle {
+            display: none;
+            background: none;
+            border: none;
+            color: var(--blanco);
+            font-size: 1.8rem;
+            cursor: pointer;
+        }
+
+        .mobile-menu {
+            display: none;
+            flex-direction: column;
+            background: var(--carbon);
+            padding: 20px;
+            gap: 15px;
+            position: fixed;
+            top: 70px;
+            left: 20px;
+            right: 20px;
+            border-radius: 15px;
+            border: 1px solid var(--burdeos);
+            z-index: 999;
+        }
+        .mobile-menu a {
+            color: var(--blanco);
+            text-decoration: none;
+            font-weight: bold;
+        }
+        .mobile-menu.show {
+            display: flex;
+        }
+
+        @media (max-width: 768px) {
+            .nav-desktop { display: none; }
+            .menu-toggle { display: block; }
+        }
+
+        /* ===== BARRA DE CONTROLES DEL LECTOR ===== */
+        #reader-bar {
+            position: fixed;
+            top: 70px;
+            left: 0;
+            right: 0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: rgba(11,11,11,0.95);
+            backdrop-filter: blur(10px);
+            padding: 10px 15px;
+            border-bottom: 2px solid var(--burdeos);
+            z-index: 999;
+            flex-wrap: wrap;
+            min-height: 50px;
+        }
+
+        #reader-bar .bar-title {
+            font-family: 'Grape Nuts', cursive;
+            font-size: 1.1rem;
+            color: var(--fucsia);
+            margin-right: 5px;
+            white-space: nowrap;
+        }
+
+        #reader-bar input[type="file"] {
+            background: var(--carbon);
+            color: var(--blanco);
+            padding: 5px 10px;
+            border: 1px solid var(--burdeos);
+            border-radius: 15px;
+            font-size: 12px;
+            max-width: 150px;
+        }
+        #reader-bar input[type="file"]::file-selector-button {
+            background: var(--burdeos);
+            color: var(--blanco);
+            border: none;
+            padding: 4px 12px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 11px;
+            transition: 0.3s;
+        }
+        #reader-bar input[type="file"]::file-selector-button:hover {
+            background: var(--fucsia);
+            color: var(--carbon);
+        }
+
+        #reader-bar select {
+            background: var(--carbon);
+            color: var(--blanco);
+            border: 1px solid var(--burdeos);
+            border-radius: 15px;
+            padding: 5px 10px;
+            font-size: 12px;
+            font-family: 'Rubik', sans-serif;
+            font-weight: 700;
+            max-width: 160px;
+            cursor: pointer;
+        }
+        #reader-bar select:hover { border-color: var(--fucsia); }
+        #reader-bar select:disabled { opacity: 0.4; cursor: not-allowed; }
+
+        #reader-bar label {
+            font-size: 12px;
+            color: var(--gris);
+            white-space: nowrap;
+        }
+
+        #reader-bar input[type="range"] {
+            accent-color: var(--fucsia);
+            width: 100px;
+            cursor: pointer;
+        }
+
+        #reader-bar input[type="number"] {
+            background: var(--carbon);
+            color: var(--blanco);
+            border: 1px solid var(--burdeos);
+            border-radius: 10px;
+            padding: 4px 6px;
+            width: 50px;
+            font-size: 12px;
+            text-align: center;
+        }
+
+        #reader-bar .nav-btn {
+            background: var(--burdeos);
+            color: var(--blanco);
+            border: none;
+            border-radius: 15px;
+            padding: 5px 14px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.3s;
+            font-weight: 700;
+        }
+        #reader-bar .nav-btn:hover:not(:disabled) {
+            background: var(--fucsia);
+            color: var(--carbon);
+            box-shadow: 0 0 20px rgba(255,68,204,0.4);
+        }
+        #reader-bar .nav-btn:disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+        }
+
+        #reader-pageCounter {
+            color: var(--fucsia);
+            font-weight: 900;
+            font-size: 13px;
+            white-space: nowrap;
+            margin-left: auto;
+        }
+
+        .reader-volume-badge {
+            background: var(--burdeos);
+            padding: 3px 12px;
+            border-radius: 12px;
+            font-size: 11px;
+            color: var(--blanco);
+            white-space: nowrap;
+            font-weight: 700;
+        }
+
+        /* ===== CONTENEDOR DE IMÁGENES ===== */
+        #imageContainer {
+            flex-grow: 1;
+            text-align: center;
+            overflow: auto;
+            padding: 90px 20px 20px;
+            scroll-behavior: smooth;
+            position: relative;
+        }
+
+        #imageContainer img {
+            max-width: 100%;
+            display: block;
+            margin: 5px auto;
+            border-radius: 8px;
+            box-shadow: 0 4px 30px rgba(0,0,0,0.5);
+            border: 1px solid rgba(139,46,46,0.3);
+            transition: max-height 0.2s ease;
+        }
+
+        /* ===== ESTADO VACÍO ===== */
+        #emptyState {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            color: var(--gris);
+            pointer-events: none;
+        }
+        #emptyState .big-icon { font-size: 60px; display: block; margin-bottom: 15px; }
+        #emptyState .highlight { color: var(--fucsia); font-weight: 900; }
+        #emptyState p { font-size: 18px; line-height: 1.8; }
+        #emptyState .sub { font-size: 14px; margin-top: 10px; }
+
+        /* ===== LOADING ===== */
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.85);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+        }
+        .loading-overlay .spinner {
+            font-size: 50px;
+            color: var(--fucsia);
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+        .loading-overlay .message {
+            margin-top: 20px;
+            font-family: 'Grape Nuts', cursive;
+            font-size: 24px;
+            color: var(--fucsia);
+        }
+
+        /* ===== TOAST ===== */
+        .toast {
+            position: fixed;
+            top: 80px;
+            left: 50%;
+            transform: translateX(-50%);
+            padding: 12px 25px;
+            border-radius: 15px;
+            z-index: 9999;
+            max-width: 90%;
+            text-align: center;
+            font-weight: 700;
+            font-size: 14px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+            animation: slideDown 0.5s ease;
+            pointer-events: none;
+        }
+        .toast.success { background: var(--verde); color: white; }
+        .toast.warning { background: #ff9800; color: white; }
+        .toast.error { background: #f44336; color: white; }
+        .toast.info { background: var(--burdeos); color: white; }
+
+        @keyframes slideDown {
+            from { opacity: 0; transform: translateX(-50%) translateY(-20px); }
+            to { opacity: 1; transform: translateX(-50%) translateY(0); }
+        }
+
+        /* ===== SCROLLBAR ===== */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: var(--carbon); }
+        ::-webkit-scrollbar-thumb { background: var(--burdeos); border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: var(--fucsia); }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 768px) {
+            .header { padding: 10px 15px; }
+            .logo { font-size: 1.3rem; }
+
+            #reader-bar {
+                top: 60px;
+                padding: 8px 10px;
+                gap: 6px;
+                min-height: 45px;
+            }
+            #reader-bar .bar-title { font-size: 0.9rem; }
+            #reader-bar input[type="file"] { max-width: 100px; font-size: 10px; padding: 4px 8px; }
+            #reader-bar select { max-width: 120px; font-size: 10px; padding: 4px 8px; }
+            #reader-bar input[type="range"] { width: 70px; }
+            #reader-bar input[type="number"] { width: 40px; font-size: 10px; }
+            #reader-bar .nav-btn { font-size: 12px; padding: 4px 10px; }
+            #reader-pageCounter { font-size: 11px; }
+            .reader-volume-badge { font-size: 10px; padding: 2px 8px; }
+            #imageContainer { padding: 80px 10px 10px; }
+            #emptyState .big-icon { font-size: 40px; }
+            #emptyState p { font-size: 15px; }
+            .toast { top: 70px; font-size: 12px; padding: 8px 16px; }
+        }
+
+        @media (max-width: 480px) {
+            .header { padding: 8px 10px; }
+            .logo { font-size: 1rem; }
+
+            #reader-bar { gap: 4px; padding: 4px 6px; }
+            #reader-bar .bar-title { font-size: 0.8rem; }
+            #reader-bar input[type="file"] { max-width: 80px; font-size: 9px; }
+            #reader-bar select { max-width: 90px; font-size: 9px; }
+            #reader-bar input[type="range"] { width: 50px; }
+            #reader-bar input[type="number"] { width: 35px; font-size: 9px; }
+            #reader-bar .nav-btn { font-size: 10px; padding: 3px 8px; }
+            #reader-pageCounter { font-size: 10px; }
+            .reader-volume-badge { font-size: 9px; padding: 2px 6px; }
+            #imageContainer { padding: 70px 5px 5px; }
+            #emptyState .big-icon { font-size: 30px; }
+            #emptyState p { font-size: 13px; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ===== CURSOR ===== -->
+    <div id="cursor-skull">💀</div>
+
+    <!-- ===== HEADER ===== -->
+    <header class="header">
+        <a href="index.html" class="logo">Neri Aiko</a>
+        <nav class="nav-desktop">
+            <a href="index.html">Inicio</a>
+            <a href="lector.html">📚 Biblioteca</a>
+            <a href="sobre.mi.html">Sobre Mí</a>
+            <a href="valorant.html">Valorant</a>
+            <a href="index.html#extension">Extensión</a>
+            <a href="index.html#contacto">Contacto</a>
+        </nav>
+        <div class="live-indicator" id="liveIndicator">
+            <span class="live-dot" id="liveDot"></span>
+            <span id="liveText">Cargando...</span>
+        </div>
+        <button class="menu-toggle" id="menuToggle" aria-label="Abrir menú">☰</button>
+    </header>
+
+    <!-- ===== MENÚ MÓVIL ===== -->
+    <div class="mobile-menu" id="mobileMenu">
+        <a href="index.html">Inicio</a>
+        <a href="lector.html">📚 Biblioteca</a>
+        <a href="sobre.mi.html">Sobre Mí</a>
+        <a href="valorant.html">Valorant</a>
+        <a href="index.html#extension">Extensión</a>
+        <a href="index.html#contacto">Contacto</a>
+    </div>
+
+    <!-- ===== BARRA DE CONTROLES DEL LECTOR ===== -->
+    <div id="reader-bar">
+        <span class="bar-title"><i class="fas fa-skull"></i> Lector</span>
+
+        <input type="file" id="fileInput" accept=".cbr,.cbz,.rar,.zip" multiple>
+
+        <select id="volumeSelect" disabled>
+            <option value="">-- Tomos --</option>
+        </select>
+
+        <button class="nav-btn" id="prevBtn" disabled><i class="fas fa-chevron-left"></i></button>
+        <button class="nav-btn" id="nextBtn" disabled><i class="fas fa-chevron-right"></i></button>
+
+        <label>Zoom:</label>
+        <input type="range" id="zoomSlider" min="50" max="200" value="100">
+        <input type="number" id="zoomInput" min="50" max="200" value="100" step="5">
+
+        <span class="reader-volume-badge" id="volumeName">📖 ---</span>
+        <span id="reader-pageCounter">📄 0 / 0</span>
+
+        <button class="nav-btn" id="fullscreenBtn"><i class="fas fa-expand"></i></button>
+    </div>
+
+    <!-- ===== CONTENEDOR DE IMÁGENES ===== -->
+    <div id="imageContainer">
+        <div id="emptyState">
+            <span class="big-icon">📚</span>
+            <p>Selecciona tus tomos de <span class="highlight">Soul Eater</span></p>
+            <p class="sub">(Puedes seleccionar varios archivos .cbr a la vez)</p>
+            <p class="sub" style="font-size: 12px; color: var(--gris); margin-top: 5px;">
+                🔄 El lector guarda automáticamente tu progreso
+            </p>
+        </div>
+    </div>
+
+    <!-- ===== LOADING OVERLAY ===== -->
+    <div class="loading-overlay" id="loadingOverlay" style="display:none;">
+        <div class="spinner"><i class="fas fa-skull"></i></div>
+        <div class="message" id="loadingMessage">Cargando...</div>
+    </div>
+
+    <!-- ===== FOOTER (oculto en esta página) ===== -->
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+
+    <script>
+        // ============================================================
+        // 1. CURSOR + PARTÍCULAS
+        // ============================================================
+        const cursorSkull = document.getElementById('cursor-skull');
+        document.addEventListener('mousemove', (e) => {
+            cursorSkull.style.left = e.clientX + 'px';
+            cursorSkull.style.top = e.clientY + 'px';
+        });
+        document.addEventListener('mousedown', () => cursorSkull.classList.add('click-effect'));
+        document.addEventListener('mouseup', () => cursorSkull.classList.remove('click-effect'));
+
+        let lastParticleTime = 0;
+        document.addEventListener('mousemove', (e) => {
+            const now = Date.now();
+            if (now - lastParticleTime < 50) return;
+            lastParticleTime = now;
+            const particle = document.createElement('div');
+            particle.className = 'particle';
+            particle.style.left = (e.clientX - 2) + 'px';
+            particle.style.top = (e.clientY - 2) + 'px';
+            document.body.appendChild(particle);
+            setTimeout(() => particle.remove(), 600);
+            if (document.querySelectorAll('.particle').length > 30) {
+                document.querySelector('.particle')?.remove();
+            }
+        });
+
+        // ============================================================
+        // 2. MENÚ MÓVIL
+        // ============================================================
+        const menuToggle = document.getElementById('menuToggle');
+        const mobileMenu = document.getElementById('mobileMenu');
+        menuToggle.addEventListener('click', () => mobileMenu.classList.toggle('show'));
+        mobileMenu.querySelectorAll('a').forEach(link => {
+            link.addEventListener('click', () => mobileMenu.classList.remove('show'));
+        });
+
+        // ============================================================
+        // 3. INDICADOR EN VIVO
+        // ============================================================
+        const WORKER_URL = 'https://nameless-resonance-e957togi-kirei-stats.togivt.workers.dev/api/stats';
+        async function checkLive() {
+            try {
+                const response = await fetch(WORKER_URL);
+                const data = await response.json();
+                const isLive = data.isLive || false;
+                const liveDot = document.getElementById('liveDot');
+                const liveText = document.getElementById('liveText');
+                if (isLive) {
+                    liveDot.classList.add('active');
+                    liveText.textContent = '🔴 ¡EN VIVO!';
+                    liveText.style.color = '#ff44cc';
+                    liveText.style.fontWeight = '900';
+                } else {
+                    liveDot.classList.remove('active');
+                    liveText.textContent = '⚫ No está en directo';
+                    liveText.style.color = '#f5f0eb';
+                    liveText.style.fontWeight = 'bold';
+                }
+            } catch (error) {
+                document.getElementById('liveText').textContent = 'Estado desconocido';
+            }
+        }
+        checkLive();
+        setInterval(checkLive, 60000);
+
+        // ============================================================
+        // 4. TOAST NOTIFICATIONS
+        // ============================================================
+        function showToast(message, type = 'info', duration = 4000) {
+            const existing = document.querySelector('.toast');
+            if (existing) existing.remove();
+
+            const toast = document.createElement('div');
+            toast.className = `toast ${type}`;
+            toast.textContent = message;
+            document.body.appendChild(toast);
+
+            setTimeout(() => {
+                toast.style.opacity = '0';
+                toast.style.transition = 'opacity 0.5s';
+                setTimeout(() => toast.remove(), 500);
+            }, duration);
+        }
+
+        // ============================================================
+        // 5. LOADING OVERLAY
+        // ============================================================
+        function showLoading(message) {
+            const overlay = document.getElementById('loadingOverlay');
+            document.getElementById('loadingMessage').textContent = message;
+            overlay.style.display = 'flex';
+        }
+
+        function hideLoading() {
+            document.getElementById('loadingOverlay').style.display = 'none';
+        }
+
+        // ============================================================
+        // 6. LECTOR PRINCIPAL CON libarchive.js
+        // ============================================================
+        class ComicReader {
+            constructor() {
+                this.volumes = [];
+                this.currentVolumeIndex = 0;
+                this.currentPage = 0;
+                this.totalPages = 0;
+                this.zoomLevel = 100;
+                this.isArchiveReady = false;
+
+                // DOM
+                this.container = document.getElementById('imageContainer');
+                this.emptyState = document.getElementById('emptyState');
+                this.fileInput = document.getElementById('fileInput');
+                this.volumeSelect = document.getElementById('volumeSelect');
+                this.prevBtn = document.getElementById('prevBtn');
+                this.nextBtn = document.getElementById('nextBtn');
+                this.pageCounter = document.getElementById('reader-pageCounter');
+                this.volumeName = document.getElementById('volumeName');
+                this.zoomSlider = document.getElementById('zoomSlider');
+                this.zoomInput = document.getElementById('zoomInput');
+                this.fullscreenBtn = document.getElementById('fullscreenBtn');
+
+                this.setupReaderEvents();
+                this.initArchive();
+                // Intentar cargar progreso guardado
+                setTimeout(() => this.loadProgress(), 500);
+            }
+
+            async initArchive() {
+                try {
+                    showLoading('Inicializando libarchive...');
+                    await Archive.init({
+                        workerUrl: 'https://cdn.jsdelivr.net/npm/libarchive.js@2.0.2/dist/worker-bundle.js'
+                    });
+                    this.isArchiveReady = true;
+                    console.log('✅ libarchive.js inicializado');
+                    hideLoading();
+                } catch (error) {
+                    console.error('❌ Error inicializando libarchive:', error);
+                    hideLoading();
+                    showToast('⚠️ Error al inicializar el lector. Usa Chrome/Edge.', 'error', 5000);
+                }
+            }
+
+            setupReaderEvents() {
+                this.fileInput.addEventListener('change', (e) => this.loadFiles(e));
+                this.prevBtn.addEventListener('click', () => this.prevPage());
+                this.nextBtn.addEventListener('click', () => this.nextPage());
+                this.volumeSelect.addEventListener('change', (e) => {
+                    this.currentVolumeIndex = parseInt(e.target.value);
+                    this.currentPage = 0;
+                    this.loadVolume();
+                });
+                this.fullscreenBtn.addEventListener('click', this.toggleFullscreen);
+
+                // Zoom
+                this.zoomSlider.addEventListener('input', () => {
+                    const val = parseInt(this.zoomSlider.value);
+                    this.zoomInput.value = val;
+                    this.zoomLevel = val;
+                    this.applyZoom();
+                });
+                this.zoomInput.addEventListener('change', () => {
+                    let val = parseInt(this.zoomInput.value);
+                    val = Math.max(50, Math.min(200, val));
+                    this.zoomInput.value = val;
+                    this.zoomSlider.value = val;
+                    this.zoomLevel = val;
+                    this.applyZoom();
+                });
+
+                // Teclado
+                document.addEventListener('keydown', (e) => {
+                    // Evitar que los atajos interfieran con inputs
+                    if (e.target.tagName === 'INPUT' || e.target.tagName === 'SELECT') return;
+
+                    if (e.key === 'ArrowRight' || e.key === ' ') {
+                        e.preventDefault();
+                        this.nextPage();
+                    } else if (e.key === 'ArrowLeft') {
+                        e.preventDefault();
+                        this.prevPage();
+                    } else if (e.key === 'ArrowUp') {
+                        e.preventDefault();
+                        this.goToPrevVolume();
+                    } else if (e.key === 'ArrowDown') {
+                        e.preventDefault();
+                        this.goToNextVolume();
+                    } else if (e.key === 'f' || e.key === 'F') {
+                        this.toggleFullscreen();
+                    }
+                });
+
+                // Scroll para actualizar contador
+                this.container.addEventListener('scroll', () => {
+                    this.updatePageCounter();
+                });
+
+                // Guardar progreso al cambiar de página
+                this.container.addEventListener('scrollend', () => {
+                    this.saveProgress();
+                });
+            }
+
+            async loadFiles(event) {
+                const files = event.target.files;
+                if (files.length === 0) return;
+
+                if (!this.isArchiveReady) {
+                    showToast('⏳ Espera a que libarchive se inicialice', 'warning');
+                    return;
+                }
+
+                showLoading('📂 Procesando archivos...');
+                this.volumes = [];
+                let loadedCount = 0;
+
+                for (const file of files) {
+                    try {
+                        const pages = await this.extractImages(file);
+                        if (pages.length > 0) {
+                            const tomoMatch = file.name.match(/Tomo\s*(\d+)/i);
+                            const chapterMatch = file.name.match(/\(#(\d+)-/);
+
+                            this.volumes.push({
+                                name: file.name,
+                                pages: pages,
+                                total: pages.length,
+                                tomoNum: tomoMatch ? parseInt(tomoMatch[1]) : null,
+                                chapterStart: chapterMatch ? parseInt(chapterMatch[1]) : null
+                            });
+                            loadedCount++;
+                        }
+                    } catch (error) {
+                        console.error(`Error en ${file.name}:`, error);
+                        showToast(`❌ Error en ${file.name}`, 'error', 3000);
+                    }
+                }
+
+                // Ordenar por número de tomo
+                this.volumes.sort((a, b) => (a.tomoNum || 999) - (b.tomoNum || 999));
+
+                if (this.volumes.length === 0) {
+                    hideLoading();
+                    showToast('❌ No se pudieron cargar los tomos', 'error');
+                    return;
+                }
+
+                this.populateVolumeSelect();
+                this.currentVolumeIndex = 0;
+                this.currentPage = 0;
+                await this.loadVolume();
+                this.saveProgress();
+                this.emptyState.style.display = 'none';
+                hideLoading();
+                showToast(`✅ ${this.volumes.length} tomos cargados`, 'success', 3000);
+            }
+
+            async extractImages(file) {
+                try {
+                    const archive = await Archive.open(file);
+                    const files = await archive.extractFiles();
+                    await archive.close();
+
+                    const imageFiles = [];
+                    for (const [name, data] of Object.entries(files)) {
+                        if (name.match(/\.(jpg|jpeg|png|gif|webp|bmp)$/i)) {
+                            const blob = await data.extract();
+                            const url = URL.createObjectURL(blob);
+                            imageFiles.push({ name, url });
+                        }
+                    }
+
+                    imageFiles.sort((a, b) => {
+                        const numA = parseInt(a.name.match(/\d+/)?.[0] || '0');
+                        const numB = parseInt(b.name.match(/\d+/)?.[0] || '0');
+                        return numA - numB || a.name.localeCompare(b.name);
+                    });
+
+                    return imageFiles;
+
+                } catch (error) {
+                    console.warn('Error con libarchive, intentando como ZIP:', error);
+                    try {
+                        return await this.extractZip(file);
+                    } catch (e) {
+                        console.error('Fallback ZIP falló:', e);
+                        return [];
+                    }
+                }
+            }
+
+            async extractZip(file) {
+                const zip = await JSZip.loadAsync(file);
+                const imageFiles = [];
+                for (const [name, entry] of Object.entries(zip.files)) {
+                    if (name.match(/\.(jpg|jpeg|png|gif|webp|bmp)$/i) && !entry.dir) {
+                        const blob = await entry.async('blob');
+                        const url = URL.createObjectURL(blob);
+                        imageFiles.push({ name, url });
+                    }
+                }
+                imageFiles.sort((a, b) => {
+                    const numA = parseInt(a.name.match(/\d+/)?.[0] || '0');
+                    const numB = parseInt(b.name.match(/\d+/)?.[0] || '0');
+                    return numA - numB || a.name.localeCompare(b.name);
+                });
+                return imageFiles;
+            }
+
+            async loadVolume() {
+                const vol = this.getCurrentVolume();
+                if (!vol) return;
+
+                showLoading(`📖 Cargando ${vol.name}...`);
+
+                // Limpiar imágenes anteriores
+                this.container.querySelectorAll('img').forEach(img => {
+                    if (img.src) URL.revokeObjectURL(img.src);
+                    img.remove();
+                });
+
+                // Cargar imágenes
+                for (const page of vol.pages) {
+                    const img = document.createElement('img');
+                    img.src = page.url;
+                    img.loading = 'lazy';
+                    this.container.appendChild(img);
+                }
+
+                // Esperar a que se carguen
+                const images = this.container.querySelectorAll('img');
+                await Promise.all(Array.from(images).map(img =>
+                    new Promise(resolve => {
+                        if (img.complete) resolve();
+                        else img.onload = resolve;
+                    })
+                ));
+
+                this.totalPages = vol.pages.length;
+                this.applyZoom();
+
+                if (this.currentPage >= this.totalPages) {
+                    this.currentPage = this.totalPages - 1;
+                }
+                if (this.currentPage < 0) {
+                    this.currentPage = 0;
+                }
+
+                setTimeout(() => {
+                    this.scrollToPage(this.currentPage);
+                    this.updateControls();
+                    hideLoading();
+                }, 100);
+
+                this.saveProgress();
+            }
+
+            getCurrentVolume() {
+                return this.volumes[this.currentVolumeIndex] || null;
+            }
+
+            scrollToPage(page) {
+                const images = this.container.querySelectorAll('img');
+                if (page >= images.length) {
+                    page = images.length - 1;
+                }
+                if (page < 0) page = 0;
+
+                let target = 0;
+                for (let i = 0; i < page; i++) {
+                    target += (images[i].offsetHeight || 0) + 10;
+                }
+                this.container.scrollTop = target;
+                this.currentPage = page;
+                this.updateControls();
+            }
+
+            prevPage() {
+                if (this.currentPage > 0) {
+                    this.scrollToPage(this.currentPage - 1);
+                    this.saveProgress();
+                } else if (this.currentVolumeIndex > 0) {
+                    this.goToPrevVolume();
+                }
+            }
+
+            nextPage() {
+                if (this.currentPage < this.totalPages - 1) {
+                    this.scrollToPage(this.currentPage + 1);
+                    this.saveProgress();
+                } else if (this.currentVolumeIndex < this.volumes.length - 1) {
+                    this.goToNextVolume();
+                }
+            }
+
+            goToPrevVolume() {
+                if (this.currentVolumeIndex > 0) {
+                    this.currentVolumeIndex--;
+                    this.volumeSelect.value = this.currentVolumeIndex;
+                    this.currentPage = 0;
+                    this.loadVolume();
+                }
+            }
+
+            goToNextVolume() {
+                if (this.currentVolumeIndex < this.volumes.length - 1) {
+                    this.currentVolumeIndex++;
+                    this.volumeSelect.value = this.currentVolumeIndex;
+                    this.currentPage = 0;
+                    this.loadVolume();
+                }
+            }
+
+            updatePageCounter() {
+                const images = this.container.querySelectorAll('img');
+                const scrollPos = this.container.scrollTop;
+                let current = 1;
+                let cumulative = 0;
+
+                for (let i = 0; i < images.length; i++) {
+                    const height = images[i].offsetHeight || 0;
+                    if (scrollPos < cumulative + height) {
+                        current = i + 1;
+                        break;
+                    }
+                    cumulative += height + 10;
+                }
+
+                if (images.length > 0 && scrollPos >= cumulative) {
+                    current = images.length;
+                }
+
+                this.pageCounter.textContent = `📄 ${current} / ${this.totalPages}`;
+                this.currentPage = current - 1;
+            }
+
+            updateControls() {
+                const vol = this.getCurrentVolume();
+                if (!vol) return;
+
+                this.totalPages = vol.pages.length;
+                this.pageCounter.textContent = `📄 ${this.currentPage + 1} / ${this.totalPages}`;
+                this.prevBtn.disabled = this.currentPage === 0 && this.currentVolumeIndex === 0;
+                this.nextBtn.disabled = this.currentPage >= this.totalPages - 1 && this.currentVolumeIndex >= this.volumes.length - 1;
+
+                // Nombre del tomo
+                let displayName = vol.name.replace(/\.(cbr|cbz|rar|zip)$/i, '');
+                const match = vol.name.match(/Soul Eater - Tomo (\d+)/i);
+                if (match) {
+                    displayName = `Tomo ${match[1]}`;
+                } else if (vol.tomoNum) {
+                    displayName = `Tomo ${vol.tomoNum}`;
+                }
+                if (vol.chapterStart) {
+                    displayName += ` (Cap. ${vol.chapterStart}+)`;
+                }
+                this.volumeName.textContent = `📖 ${displayName}`;
+            }
+
+            applyZoom() {
+                this.container.querySelectorAll('img').forEach(img => {
+                    img.style.maxHeight = `${this.zoomLevel}vh`;
+                });
+                setTimeout(() => {
+                    this.scrollToPage(this.currentPage);
+                }, 150);
+            }
+
+            populateVolumeSelect() {
+                this.volumeSelect.innerHTML = '';
+                this.volumes.forEach((vol, i) => {
+                    const option = document.createElement('option');
+                    option.value = i;
+                    let displayName = vol.name.replace(/\.(cbr|cbz|rar|zip)$/i, '');
+                    const match = vol.name.match(/Soul Eater - Tomo (\d+)/i);
+                    if (match) {
+                        displayName = `Tomo ${match[1]}`;
+                    } else if (vol.tomoNum) {
+                        displayName = `Tomo ${vol.tomoNum}`;
+                    }
+                    if (vol.chapterStart) {
+                        displayName += ` (Cap. ${vol.chapterStart}+)`;
+                    }
+                    option.textContent = displayName;
+                    this.volumeSelect.appendChild(option);
+                });
+                this.volumeSelect.disabled = false;
+                if (this.volumes.length > 0) {
+                    this.volumeSelect.value = '0';
+                }
+            }
+
+            toggleFullscreen() {
+                if (!document.fullscreenElement) {
+                    document.documentElement.requestFullscreen();
+                } else {
+                    document.exitFullscreen?.();
+                }
+            }
+
+            // ===== GUARDAR PROGRESO =====
+            saveProgress() {
+                try {
+                    if (this.volumes.length === 0) return;
+                    const vol = this.getCurrentVolume();
+                    if (!vol) return;
+
+                    const data = {
+                        volumeIndex: this.currentVolumeIndex,
+                        page: this.currentPage,
+                        volumes: this.volumes.map(v => v.name),
+                        timestamp: Date.now()
+                    };
+                    localStorage.setItem('neri_reader_progress', JSON.stringify(data));
+                    console.log('💾 Progreso guardado:', data);
+                } catch (e) {
+                    console.warn('No se pudo guardar el progreso:', e);
+                }
+            }
+
+            loadProgress() {
+                try {
+                    const raw = localStorage.getItem('neri_reader_progress');
+                    if (!raw) {
+                        console.log('📭 No hay progreso guardado');
+                        return;
+                    }
+
+                    const data = JSON.parse(raw);
+                    console.log('📂 Cargando progreso guardado:', data);
+
+                    // Verificar que haya datos válidos
+                    if (!data.volumes || !Array.isArray(data.volumes) || data.volumes.length === 0) {
+                        console.log('⚠️ Datos de progreso inválidos');
+                        return;
+                    }
+
+                    // Esperar a que los tomos estén cargados
+                    const checkVolumes = () => {
+                        if (this.volumes.length === 0) {
+                            setTimeout(checkVolumes, 500);
+                            return;
+                        }
+
+                        const currentNames = this.volumes.map(v => v.name);
+                        const savedNames = data.volumes || [];
+
+                        // Verificar que los nombres coincidan (mismos tomos)
+                        const match = savedNames.length === currentNames.length &&
+                            savedNames.every((name, i) => name === currentNames[i]);
+
+                        if (match) {
+                            this.currentVolumeIndex = Math.min(data.volumeIndex, this.volumes.length - 1);
+                            this.currentPage = data.page || 0;
+                            this.volumeSelect.value = this.currentVolumeIndex;
+                            console.log(`✅ Progreso restaurado: Tomo ${this.currentVolumeIndex + 1}, Página ${this.currentPage + 1}`);
+
+                            // Cargar el tomo y la página
+                            this.loadVolume();
+                            showToast(`📖 Retomando en ${this.volumeName.textContent}`, 'info', 3000);
+                        } else {
+                            console.log('⚠️ Los tomos han cambiado, no se puede restaurar el progreso');
+                        }
+                    };
+
+                    checkVolumes();
+                } catch (e) {
+                    console.warn('Error cargando progreso:', e);
+                }
+            }
+        }
+
+        // ============================================================
+        // 7. INICIALIZAR LECTOR
+        // ============================================================
+        document.addEventListener('DOMContentLoaded', () => {
+            // Cargar JSZip para fallback
+            if (typeof JSZip === 'undefined') {
+                const script = document.createElement('script');
+                script.src = 'https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js';
+                script.onload = () => {
+                    console.log('✅ JSZip cargado para fallback');
+                };
+                document.head.appendChild(script);
+            }
+
+            const reader = new ComicReader();
+            window.reader = reader;
+        });
+    </script>
+</body>
+</html>
