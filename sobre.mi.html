@@ -566,6 +566,35 @@
             color: var(--burdeos);
         }
 
+        /* ===== SECCIÓN DE CAFÉ ===== */
+        .coffee-section { margin-top: 70px; }
+        .coffee-title { text-align: center; margin-bottom: 40px; }
+        .coffee-title h2 {
+            font-size: 2.5rem; font-weight: 900; text-transform: uppercase;
+            background: linear-gradient(135deg, var(--fucsia), var(--blanco));
+            -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;
+            filter: drop-shadow(2px 2px 4px var(--burdeos));
+        }
+        .coffee-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; }
+        .coffee-card {
+            background: rgba(15,15,15,0.7); backdrop-filter: blur(10px);
+            border: 1px solid var(--burdeos); border-top: 3px solid var(--burdeos-oscuro);
+            border-radius: 20px; padding: 20px; transition: all 0.3s;
+            display: flex; flex-direction: column; gap: 15px;
+        }
+        .coffee-card:hover {
+            border-color: var(--fucsia); border-top-color: var(--fucsia);
+            box-shadow: 0 0 25px rgba(255,68,204,0.4); transform: translateY(-5px);
+        }
+        .coffee-card h3 { font-size: 1.4rem; font-weight: 900; color: var(--blanco); margin-bottom: 5px; }
+        .coffee-origin { font-size: 0.9rem; font-weight: bold; color: var(--fucsia); letter-spacing: 1px; text-transform: uppercase; }
+        .coffee-details { list-style: none; padding: 0; font-size: 0.95rem; line-height: 1.6; }
+        .coffee-details li { display: flex; justify-content: space-between; border-bottom: 1px dashed rgba(139,46,46,0.3); padding: 6px 0; }
+        .coffee-details .label { color: var(--gris); font-weight: 600; }
+        .coffee-details .value { color: var(--blanco); font-weight: 700; text-align: right; }
+        .coffee-notes { margin-top: auto; background: rgba(139,46,46,0.3); border-radius: 10px; padding: 10px; text-align: center; font-size: 0.85rem; font-weight: bold; color: #ddd; font-style: italic; }
+        .coffee-notes span { color: var(--fucsia); }
+
         /* Reproductor de música flotante */
         #music-player {
             position: fixed;
@@ -765,6 +794,65 @@
                 </div>
             </div>
         </section>
+
+        <!-- ===== SECCIÓN DE CAFÉ ===== -->
+        <section class="coffee-section fade-in">
+            <div class="coffee-title">
+                <h2>Mi Barra de Café ☕</h2>
+            </div>
+
+            <div class="coffee-grid">
+                <!-- Café 1 -->
+                <div class="coffee-card">
+                    <h3>Colombiano</h3>
+                    <div class="coffee-origin">🇨🇴 Colombia</div>
+                    <ul class="coffee-details">
+                        <li><span class="label">Tueste</span><span class="value">Medio</span></li>
+                        <li><span class="label">Cuerpo</span><span class="value">Medio-Alto</span></li>
+                        <li><span class="label">Acidez</span><span class="value">Media</span></li>
+                    </ul>
+                    <div class="coffee-notes">Notas: <span>Chocolate intenso, aroma intenso</span></div>
+                </div>
+
+                <!-- Café 2 -->
+                <div class="coffee-card">
+                    <h3>Bourbon de Chalatenango</h3>
+                    <div class="coffee-origin">🇸🇻 El Salvador</div>
+                    <ul class="coffee-details">
+                        <li><span class="label">Variedad</span><span class="value">Bourbon</span></li>
+                        <li><span class="label">Altura</span><span class="value">1,250 m</span></li>
+                        <li><span class="label">Proceso</span><span class="value">Lavado</span></li>
+                    </ul>
+                    <div class="coffee-notes">Notas: <span>Naranja, mandarina, cacao, galleta de chocolate</span></div>
+                </div>
+
+                <!-- Café 3 -->
+                <div class="coffee-card">
+                    <h3>Caturra de Atitlán</h3>
+                    <div class="coffee-origin">🇬🇹 Guatemala</div>
+                    <ul class="coffee-details">
+                        <li><span class="label">Variedad</span><span class="value">Caturra</span></li>
+                        <li><span class="label">Altura</span><span class="value">1,600 m</span></li>
+                        <li><span class="label">Proceso</span><span class="value">Honey</span></li>
+                        <li><span class="label">Tueste</span><span class="value">Medio</span></li>
+                    </ul>
+                    <div class="coffee-notes">Notas: <span>Dulzura tipo miel, cuerpo sedoso</span></div>
+                </div>
+
+                <!-- Café 4 -->
+                <div class="coffee-card">
+                    <h3>Pacamara de San Fernando</h3>
+                    <div class="coffee-origin">🇸🇻 El Salvador</div>
+                    <ul class="coffee-details">
+                        <li><span class="label">Variedad</span><span class="value">Pacamara</span></li>
+                        <li><span class="label">Altura</span><span class="value">1,600 m</span></li>
+                        <li><span class="label">Proceso</span><span class="value">Lavado</span></li>
+                    </ul>
+                    <div class="coffee-notes">Notas: <span>Azúcar morena, panela, caramelo, chocolate, pera y cacao</span></div>
+                </div>
+            </div>
+        </section>
+
     </main>
 
     <!-- REPRODUCTOR -->
